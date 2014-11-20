@@ -1,0 +1,15 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|Label.h2
+{
+	color: #585859;
+	fontFamily: arial;
+	fontSize: 34;
+	paddingTop: 5px;
+	paddingRight: 0px;
+	paddingBottom: 0px;
+	paddingLeft: 5px;
+	typographicCase: uppercase;
+}

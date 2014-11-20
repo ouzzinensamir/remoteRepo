@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<flex-config xmlns="http://www.adobe.com/2006/flex-config">
+
+	<compiler>
+		<services>C:\project\marsa\tos\tos-layer-web\src\main\resources\services-config.xml</services>
+		<locale>
+			<locale-element>en_US</locale-element>
+		</locale>
+
+
+		<keep-as3-metadata>
+			<name>Bindable</name>
+			<name>Managed</name>
+			<name>ChangeEvent</name>
+			<name>NonCommittingChangeEvent</name>
+			<name>Transient</name>
+			<name>Id</name>
+			<name>Version</name>
+			<name>Lazy</name>
+			<name>Name</name>
+			<name>In</name>
+			<name>Out</name>
+			<name>Inject</name>
+			<name>Produces</name>
+			<name>PostConstruct</name>
+			<name>Destroy</name>
+			<name>Observer</name>
+			<name>ManagedEvent</name>
+		</keep-as3-metadata>
+
+		<namespaces>
+		</namespaces>
+				
+	</compiler>
+
+	<metadata>
+	</metadata>
+	
+</flex-config>

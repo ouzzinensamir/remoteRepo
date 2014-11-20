@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<cairngorm:ServiceLocator xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:cairngorm="com.adobe.cairngorm.business.*"
+						  xmlns:granite="org.granite.rpc.remoting.mxml.*">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.managers.CursorManager;
+			
+			public function afterExecution():void
+			{
+				CursorManager.removeAllCursors();
+			}
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="welcomeService"
+								destination="{ServicesConstantes.WELCOME_SERVICE}"
+								result="{afterExecution()}"
+								showBusyCursor="true"/>
+	
+	<mx:HTTPService id="GetHashcode" url="http://localhost:8080/MondecaProject/GetHashcode"  method="GET"/>
+	<mx:HTTPService id="authentif" url="http://localhost:8080/MondecaProject/home.do"  method="GET"/>
+</cairngorm:ServiceLocator>

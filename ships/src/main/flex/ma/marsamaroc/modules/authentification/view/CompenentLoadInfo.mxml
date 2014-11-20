@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Module xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx"  width="100%" height="100%" creationComplete="init()" xmlns:control="ma.marsamaroc.modules.authentification.control.*">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import ma.marsamaroc.modules.authentification.control.event.AuthEvent;
+			import ma.marsamaroc.modules.authentification.control.event.LoadEvent;
+			import ma.marsamaroc.modules.authentification.model.AuthModel;
+
+			[Inject]
+			public var model:AuthModel;
+		   	[Embed(source="/images/first_tab.jpg")]
+			private static const myIcon:Class;
+			private function init():void
+			{
+				var requestLoad:LoadEvent=new LoadEvent(LoadEvent.LOAD_INFO);
+				CairngormEventDispatcher.getInstance().dispatchEvent(requestLoad);
+			}
+		]]>
+	</fx:Script>
+	  <fx:Style>
+        .accHeader {
+            fillColors: #FFFFFF, #FFFFFF;
+            fillAlphas: 1.0, 0.5;
+            selectedFillColors: #addd28, #addd28;
+        }
+    </fx:Style>
+	
+	<fx:Declarations>
+		<control:LoadControl id="loadInfTest"/>
+	</fx:Declarations>
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox width="100%" paddingBottom="0" paddingTop="0" >
+			<mx:HBox width="100%" paddingBottom="0" paddingTop="0">
+				<mx:Image source="images/logo.jpg"/>
+			</mx:HBox>
+			<mx:VBox paddingRight="8" >
+				<mx:HBox width="100%" paddingTop="0" paddingRight="0">
+					<mx:HBox>
+						<mx:HBox>
+							<mx:Label text="Retour aux résultats" color="#09647C" fontSize="12" fontFamily="verdana" fontWeight="bold"/>
+						</mx:HBox>
+						<mx:HBox paddingTop="6">
+							<mx:Image source="images/puce_bleu.jpg"/>
+						</mx:HBox>
+					</mx:HBox>
+				</mx:HBox>
+				<mx:HBox width="100%" paddingRight="0" >
+					<mx:HBox>
+						<mx:Image source="images/mail.jpg"/>
+					</mx:HBox>
+					<mx:HBox>
+						<mx:Image source="images/pdf.jpg"/>
+					</mx:HBox>
+				</mx:HBox>
+			
+			</mx:VBox>
+		</mx:HBox>
+		<mx:HBox width="100%" height="100%">
+			<mx:TabNavigator width="100%" height="100%"  >
+				<mx:VBox width="100%" height="100%" label="Consulter" fontSize="11" fontFamily="verdana" fontWeight="bold" color="#09647C"  >
+				<mx:HBox width="100%" height="100%" backgroundColor="#FFFFFF" >
+					<mx:VBox height="100%" paddingTop="10" paddingLeft="5">
+					<mx:HBox  height="27" width="240" id="classePar" backgroundAttachment="images/bg_tit_left.jpg" paddingLeft="5" paddingTop="3">
+						<mx:Label text="Classé par :" />
+						<mx:Label text="{model.login}" fontSize="11" fontWeight="normal" color="#69820F" />
+						<mx:Label text="  Ville" fontSize="11" fontWeight="normal" />
+					</mx:HBox>
+					<mx:HBox width="240" height="100%" >
+						<!--   
+								To do : afficher le filte des différents composants
+							-->
+				     </mx:HBox>
+				     </mx:VBox>
+				     <mx:VBox height="100%" width="100%" paddingTop="10" paddingRight="10" paddingBottom="10">
+						<mx:HBox width="100%" height="27" backgroundAttachment="images/bg_tit_right.jpg" paddingLeft="5" paddingTop="3">
+							<mx:Label text="Test" fontSize="11" fontWeight="normal" color="#69820F" />
+						</mx:HBox>
+					     <mx:HBox width="100%" height="100%" >
+							<!--   
+								To do : afficher la liste des objets touristique
+							-->
+						</mx:HBox>
+					 </mx:VBox>
+					</mx:HBox>
+				</mx:VBox>			
+		</mx:TabNavigator>
+	</mx:HBox>
+	</mx:VBox>
+</s:Module>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="100%" height="100%" color="#0B6376" backgroundColor="#FBFAFA" xmlns:control="ma.marsamaroc.modules.authentification.control.*">
+	<fx:Script>
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import ma.marsamaroc.modules.authentification.control.event.AuthEvent;
+			import ma.marsamaroc.modules.authentification.model.AuthModel;
+			[Bindable]
+			public var model:AuthModel=AuthModel.getInstance();
+		   	public var test:String="Test";
+		   	private function authentification():void
+		   	{
+				model.login=login.text;
+				model.password=password.text;
+				var requestAuth:AuthEvent=new AuthEvent(AuthEvent.AUTHENTIF);
+				CairngormEventDispatcher.getInstance().dispatchEvent(requestAuth);
+		   	}
+		   	private function annuler():void
+		   	{
+		   		login.text="";
+		   		password.text="";
+		   	}
+	</fx:Script>
+	<fx:Declarations>
+		<control:AuthControl id="authControl"/>
+		<control:LoadControl id="loadControl"/>	
+	</fx:Declarations>
+	<mx:VBox  backgroundColor="#FBF7F7" horizontalCenter="0" verticalCenter="0" width="456" height="206">
+	<mx:HBox width="100%" height="100%">
+		<mx:Panel title="Authentification"  backgroundAlpha="1.0" backgroundColor="#FCF8F8" borderColor="#52B8B9" width="100%" height="100%">
+			<mx:Form  width="100%" height="100%">
+				<mx:FormItem>
+					<mx:Label text="Login">
+						
+					</mx:Label>
+					<mx:TextInput id="login" width="300"/>
+				</mx:FormItem>
+				<mx:FormItem>
+					<mx:Label text="Password">
+						
+					</mx:Label>
+					<mx:TextInput id="password" width="300"/>
+				</mx:FormItem>
+			</mx:Form>
+		</mx:Panel>
+	</mx:HBox>
+	<mx:HBox width="100%" horizontalAlign="right">
+			<mx:Button label="Entrer" click="authentification()" width="100"/>
+			<mx:Button label="Annuler" click="annuler()" width="100"/>
+	</mx:HBox>
+
+	</mx:VBox>
+</s:NavigatorContent>
