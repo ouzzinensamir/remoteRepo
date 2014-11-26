@@ -19,6 +19,9 @@
     <application path="ships.mxml">
       <airExcludes/>
     </application>
+    <application path="main/flex/ships.mxml">
+      <airExcludes/>
+    </application>
   </applications>
   <modules/>
   <buildCSSFiles/>

@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
-					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx"  initialize="initializeHandler(event)">
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   initialize="initializeHandler(event)" xmlns:component="component.*">
 	<fx:Declarations>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
+			import component.AbstractComponent;
+			
 			import mx.containers.TitleWindow;
-			import mx.controls.Button;
 			import mx.controls.TextInput;
+			import mx.core.DragSource;
+			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
+			
+			import popups.GenericPopup;
+			import popups.LinePopup;
+			import popups.RailPopup;
+			import popups.RectPopup;
 			
 			
 			[Bindable]
@@ -22,112 +32,76 @@
 			public var xfieldInput:TextInput;
 			public var yfieldInput:TextInput;
 			
-			protected function initializeHandler(event:FlexEvent):void
+			private function initializeHandler(event:FlexEvent):void
 			{
 				echelle = "Echelle : 1cm <-> 200m";
 			}
 			
-			private function mouseOver(event:MouseEvent):void
+			private function mouveComponent(event:MouseEvent):void
 			{
-				if((event.currentTarget as Image) != selectedImage)
-					event.currentTarget.alpha =0.8;
-			}
-			
-			private function mouseOut(event:MouseEvent):void
-			{
-				if((event.currentTarget as Image) != selectedImage)
-					event.currentTarget.alpha =1;
-			}
-			
-			protected function selectComponent(event:MouseEvent):void
-			{
-				//Selection effect 
-				if(null!=selectedImage)
-				{
-					selectedImage.alpha = 1;
-				}
 				selectedImage = event.currentTarget as Image;
 				selectedImage.alpha = 0.6;
-				//Button Action
-				if(selectedImage.id=="grid")
-				{
-					displayGrid();
-				}
-				if(selectedImage.id=="pain")
-				{
-					deleteGrid();
-				}
-				if(selectedImage.id=="rail")
-				{
-					callDrawer(event);
-				}
-				if(selectedImage.id=="rect")
-				{
-					callDrawer(event);
-				}
-				
+				var ds:DragSource = new DragSource();
+				ds.addData(selectedImage.id, 'idComponent');
+				// Call the DragManager doDrag() method to start the drag.
+				DragManager.doDrag(selectedImage, ds, event);
 			}
 			
-			private function callDrawer(event:MouseEvent):void
+			// Called when the user moves the drag indicator onto the drop target.
+			private function dragEnterHandler(event:DragEvent):void {
+				// Accept the drag only if the user is dragging data 
+				// identified by the 'color' format value.
+				if (event.dragSource.hasFormat('idComponent')) {
+					// Get the drop target component from the event object.
+					var dropTarget:HBox=HBox(event.currentTarget);
+					// Accept the drop.
+					DragManager.acceptDragDrop(dropTarget);
+				}
+			}
+					
+			// Called if the target accepts the dragged object and the user 
+			// releases the mouse button while over the Canvas container. 
+			private function dragDropHandler(event:DragEvent):void {
+				if (event.dragSource.hasFormat('idComponent')) {
+					var data:String = event.dragSource.dataForFormat('idComponent') as String;
+					if(data=="grid")
+					{
+						displayGrid();
+					}
+					if(data=="pain")
+					{
+						deleteGrid();
+					}
+					if(data=="rail")
+					{
+						callDrawer(event);
+					}
+					if(data=="rect")
+					{
+						callDrawer(event);
+					}
+					if(data=="line")
+					{
+						callDrawer(event);
+					}
+				}
+			}    
+			
+			private function callDrawer(event:DragEvent):void
 			{
-				myPopUp = new TitleWindow;
-				myPopUp.title = "Coordonées X et Y ";
-				populateWindow(event);
-				PopUpManager.addPopUp(myPopUp, this, true);
-				PopUpManager.centerPopUp(myPopUp);
-				
-			}
-			public function populateWindow(event:MouseEvent):void {
-				var xfield:Label = new Label;
-				xfield.text = "X :";
-				var yfield:Label = new Label;
-				yfield.text = "Y :";
-				xfieldInput = new TextInput;
-				yfieldInput = new TextInput;
-				var close:Button = new Button();
-				close.label="close";
-				close.percentWidth = 100;
-				var ok:Button = new Button();
-				ok.label="valider";
-				ok.percentWidth = 100;
-				if(event.currentTarget.id=="rail")
-					ok.addEventListener(MouseEvent.CLICK, validateRailPopup);
-				if(event.currentTarget.id=="rect")
-					ok.addEventListener(MouseEvent.CLICK, validateRectPopup);
-				close.addEventListener(MouseEvent.CLICK, closePopup);
-				myPopUp.addElement(xfield);
-				myPopUp.addElement(xfieldInput);
-				myPopUp.addElement(yfield);
-				myPopUp.addElement(yfieldInput);
-				myPopUp.addElement(ok);
-				myPopUp.addElement(close);
-			}
-			
-			private function validateRailPopup(event:MouseEvent):void {
-				PopUpManager.removePopUp(event.currentTarget.parent);
-				drawRail(xfieldInput.text ,yfieldInput.text);
-			}
-			private function validateRectPopup(event:MouseEvent):void {
-				PopUpManager.removePopUp(event.currentTarget.parent);
-				drawBlueRect(xfieldInput.text ,yfieldInput.text);
-			}
-			private function closePopup(event:MouseEvent):void {
-				PopUpManager.removePopUp(event.currentTarget.parent);
-			}
-			
-			private  function drawRail(x:String, y:String):void {
-				[Embed(source='images/rail.jpg')] 
-				var ImgField:Class; 
-				var image:Image = new Image();
-				image.source = ImgField;
-				image.x = Number(x);
-				image.y = Number(y);
-				terminal.addElement(image);
-			}
-			private  function drawBlueRect(x:String, y:String):void {
-				terminal.graphics.beginFill(0x3366FF, 1.0);
-				terminal.graphics.drawRect(Number(x), Number(y),30,30);
-				terminal.graphics.endFill();
+				var coordinates:GenericPopup;
+				var data:String = event.dragSource.dataForFormat('idComponent') as String;
+				var definedX:int=event.currentTarget.mouseX;
+				var definedY:int=event.currentTarget.mouseY;
+				if(data=="rail")
+					coordinates =  new RailPopup(definedX,definedY);
+				if(data=="rect")
+					coordinates =  new RectPopup(definedX,definedY);
+				if(data=="line")
+					coordinates =  new LinePopup(definedX,definedY);
+				coordinates.terminal=terminal;
+				PopUpManager.addPopUp(coordinates,this,true);
+				PopUpManager.centerPopUp(coordinates);
 			}
 			
 			private function displayGrid():void
@@ -141,101 +115,82 @@
 				terminal.removeAllElements();
 			}
 			
+			protected function terminal_mouseDownHandler(event:MouseEvent):void
+			{
+				var tedst:AbstractComponent=event.target as AbstractComponent ;
+				tedst.startDrag();
+			}
+			
+			protected function terminal_mouseUpHandler(event:MouseEvent):void
+			{
+				var tedst:AbstractComponent=event.target as AbstractComponent ;
+				tedst.stopDrag();
+			}
+			
 		]]>
 	</fx:Script>
 		<!--Container -->
-		<s:HGroup 
-			width="100%" height="100%"
-			horizontalAlign="center"
-			verticalAlign="middle">
-			<mx:VBox
-				width="670" height="450"
-				horizontalAlign="center"
-				verticalAlign="middle"
-				borderStyle="solid"
-				borderColor="#C0C0C0"
-				>
+		<s:HGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+			<mx:VBox width="650" height="500" borderColor="#C0C0C0" borderStyle="solid"
+					 horizontalAlign="center" verticalAlign="middle">
 				<!--Tools Bar -->
-				<mx:VBox borderStyle="solid"
-						 borderColor="#C0C0C0" backgroundColor="#F2F2F2" width="100%" height="20%" >
+				<mx:VBox width="100%" height="18%" backgroundColor="#F2F2F2" borderColor="#C0C0C0"
+						 borderStyle="solid">
 					<!-- First Part-->
-					<mx:HBox horizontalAlign="center" verticalAlign="middle" width="100%" height="50%">
-						<s:Image 
-							id="pain"
-							source="@Embed(source = '/images/pain.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							toolTip="Suppression"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							id="grid"
-							source="@Embed(source = '/images/grid.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							toolTip="Grid"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/backFor.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/mouse.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/refrech.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							id="rect"
-							source="@Embed(source = '/images/road.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							toolTip="Rectangle"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							id="rail"
-							source="@Embed(source = '/images/rail.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							toolTip="Rail"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/zenzibar.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
+					<mx:HBox width="100%" height="50%"
+							 verticalAlign="middle" horizontalGap="3" horizontalAlign="right" paddingRight="10" >
+						<s:Image id="pain" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/pain.png')" toolTip="Suppression"/>
+						<mx:VRule height="100%"/>
+						<s:Image id="grid" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/grid.jpg')" toolTip="Grid"/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/back_left.png')"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/back_reight.png')"/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/mouse.png')"/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/copie.png')"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/remove.png')"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/refrech.png')"/>
+						<mx:VRule height="100%"/>
+						<s:Image id="stop" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/stop.png')" toolTip="Stop"/>
+						<s:Image id="line" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/ligne.png')" toolTip="Ligne"/>
+						<s:Image id="parcking" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/parcking.png')" toolTip="Parcking"/>
+						<s:Image id="point" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/point.png')" toolTip="Point"/>
+						<s:Image id="triangle" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/triangle.png')" toolTip="Triangle"/>
+						<s:Image id="rect" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/ractangle_mere.png')" toolTip="Rectangle"/>
+						<s:Image id="rectangle_vert" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/rectangle_vert.png')" toolTip="Rectangle"/>
+						<s:Image id="tringle_bizzar" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/triangle_bizzar.png')" toolTip="Triangle"/>
+						<mx:VRule height="100%"/>
+						<s:Image id="rail" mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/rail.png')" toolTip="Rail"/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/zenzibar.png')"/>
 					</mx:HBox>
 					<mx:HRule width="100%"/>
 					<!-- Second Part-->
-					<mx:HBox verticalAlign="middle" width="100%" height="50%" paddingLeft="5">
-						<s:Image 
-							source="@Embed(source = '/images/zoomInOut.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Label text="Accés direct :" fontWeight="bold" fontSize="12"/>
-						<s:DropDownList selectedIndex="0" width="20%"> 
+					<mx:HBox width="100%" height="50%" paddingRight="10" paddingLeft="10" verticalAlign="middle" horizontalAlign="right" horizontalGap="3">
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/zoomInOut.png')"/>
+						<mx:VRule height="100%"/>
+						<s:Label fontSize="12" fontWeight="bold" text="Accés direct :"/>
+						<s:DropDownList width="20%" selectedIndex="0"> 
 							<mx:ArrayCollection>
 								<fx:String>Zone</fx:String>
 								<fx:String>Navires</fx:String>
@@ -244,7 +199,7 @@
 								<fx:String>Avion</fx:String>
 							</mx:ArrayCollection>
 						</s:DropDownList>
-						<s:DropDownList selectedIndex="0" width="20%"> 
+						<s:DropDownList width="20%" selectedIndex="0"> 
 							<mx:ArrayCollection>
 								<fx:String>Travée</fx:String>
 								<fx:String>Navires</fx:String>
@@ -253,62 +208,47 @@
 								<fx:String>Avion</fx:String>
 							</mx:ArrayCollection>
 						</s:DropDownList>
-						<s:Image 
-							toolTip="OK"
-							source="@Embed(source = '/images/okButton.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/okButton.jpg')" toolTip="OK"/>
+						<mx:VRule height="100%"/>
 						<mx:HBox width="20%">
 							
 						</mx:HBox>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/hand.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/lock.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/binoculars.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
-						<mx:VRule  height="100%"/>
-						<s:Image 
-							source="@Embed(source = '/images/doubleZoom.jpg')"
-							mouseOver="mouseOver(event)"
-							mouseOut="mouseOut(event)"
-							click="selectComponent(event)"
-							/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/hand.jpg')"/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/lock.jpg')"/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/binoculars.jpg')"/>
+						<mx:VRule height="100%"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/zoom_left.png')"/>
+						<s:Image mouseDown="mouveComponent(event)" 
+								 source="@Embed(source = '/images/zoom_reghit.png')"/>
 					</mx:HBox>
 				</mx:VBox>
 				<!--Terminal -->
-				<mx:HBox  borderStyle="solid" borderColor="#000000" backgroundColor="#F2F2F2" width="85%" height="70%">
-					<s:Group>
-						<s:Image id="grid_terminal" width="100%" height="100%" source="@Embed(source = '/images/terminal.jpg')" visible="false"/>
-						<mx:Canvas id="terminal"/>
-					</s:Group>
+				<mx:HBox width="85%" height="72%" backgroundColor="#F2F2F2" borderColor="#000000"
+						 borderStyle="solid" dragEnter="dragEnterHandler(event)" dragDrop="dragDropHandler(event)">
+					<mx:Canvas>
+						<s:Image id="grid_terminal" visible="false" width="100%" height="100%"
+								 source="@Embed(source = '/images/terminal.jpg')"/>
+						<component:Terminal id="terminal" mouseUp="terminal_mouseUpHandler(event)" mouseDown="terminal_mouseDownHandler(event)" dragEnter="dragEnterHandler(event)" dragDrop="dragDropHandler(event)" />
+					</mx:Canvas>
 					
 				</mx:HBox>
 				<!-- stat bar -->
-				<mx:HBox backgroundColor="#7F7F7F" width="100%" height="10%">
+				<mx:HBox width="100%" height="10%" backgroundColor="#7F7F7F">
 					<mx:HBox width="80%" height="100%" verticalAlign="middle">
-						<s:Label fontWeight="bold" fontSize="12" color="#FFFFFF" text="{echelle}" paddingLeft="9"/>
+						<s:Label color="#FFFFFF" fontSize="12" fontWeight="bold" paddingLeft="9"
+								 text="{echelle}"/>
 					</mx:HBox>
-					<mx:HBox width="20%" height="100%" verticalAlign="middle" horizontalAlign="right">
-						<s:Label fontWeight="bold" fontSize="12" color="#FFFFFF" text="Coordonnées : (300,400)" paddingRight="9"/>
+					<mx:HBox width="20%" height="100%" horizontalAlign="right" verticalAlign="middle">
+						<s:Label color="#FFFFFF" fontSize="12" fontWeight="bold" paddingRight="9"
+								 text="Coordonnées : (300,400)"/>
 					</mx:HBox>
 				</mx:HBox>
 			</mx:VBox>

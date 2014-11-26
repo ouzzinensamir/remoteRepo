@@ -1,0 +1,91 @@
+<s:TitleWindow  xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				close="close(event)"
+				cornerRadius="15"
+				controlBarVisible="true"
+				width="500"
+				height="300"
+				creationComplete="init()">
+	<s:states> 
+		<s:State name="DEFAULT"/> 
+		<s:State name="LINE"/> 
+		<s:State name="RAIL"/>
+		<s:State name="RECT"/>
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+			import component.Terminal;
+			
+			import mx.managers.PopUpManager;
+			[Bindable]
+			public var terminal:Terminal;
+			[Bindable]
+			public var definedX:int;
+			[Bindable]
+			public var definedY:int;
+			
+			private function init():void{
+				PopUpManager.centerPopUp(this);
+			}
+			protected function addNewComponent(event:MouseEvent):void{
+				close(event);
+			}
+			
+			public function close(event:Event):void{
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	
+	<s:HGroup width="100%" height="100%"
+			horizontalAlign="center"
+			verticalAlign="middle">
+			<mx:VBox id="container" width="100%" height="100%" paddingTop="20">
+				<mx:HBox width="100%" height="80%" horizontalAlign="left" horizontalGap="30" id="generalCoordinates">
+					<mx:Form id="formPoint1">
+						<mx:FormItem styleName="label" label="X :" required="true" id="x1">
+							<s:TextInput id="x1Value" text="{definedX}" enabled="false"/>
+						</mx:FormItem>
+						<mx:FormItem styleName="label" label="Y :" required="true" id="y1" >
+							<s:TextInput id="y1Value" text="{definedY}" enabled="false"/>
+						</mx:FormItem>
+					</mx:Form>
+					<mx:Form id="formPoint2" includeIn="LINE,RAIL">
+						<mx:FormItem styleName="label" label="X2 :" required="true" id="x2">
+							<s:TextInput id="x2Value"/>
+						</mx:FormItem>
+						<mx:FormItem styleName="label" label="Y2 :" required="true" id="y2" >
+							<s:TextInput id="y2Value"/>
+						</mx:FormItem>
+					</mx:Form>
+					<mx:Form id="formDimension" includeIn="RECT">
+						<mx:FormItem styleName="label" label="Width :" required="true">
+							<s:TextInput id="widthComp"/>
+						</mx:FormItem>
+						<mx:FormItem styleName="label" label="height :" required="true" >
+							<s:TextInput id="heightComp"/>
+						</mx:FormItem>
+						<mx:FormItem styleName="label" label="Orientation :" required="true" >
+							<s:DropDownList id="orientation" selectedIndex="0"> 
+								<mx:ArrayCollection>
+									<fx:String>Droite</fx:String>
+									<fx:String>Gauche</fx:String>
+								</mx:ArrayCollection>
+							</s:DropDownList>
+						</mx:FormItem>
+					</mx:Form>
+				</mx:HBox>
+				<!-- Button -->
+				<mx:HBox  id="button"  width="90%" height="20%" verticalAlign="middle" horizontalAlign="right" paddingLeft="20">
+					<s:Button id="ko"  width="25%" cornerRadius="10" skinClass="skins.ButtonSkin" label="Close" click="close(event)"/>
+					<s:Button id="ok"  width="25%" cornerRadius="10" skinClass="skins.ButtonSkin" label="Add" click="addNewComponent(event)" />
+				</mx:HBox>
+			</mx:VBox>
+	</s:HGroup>
+</s:TitleWindow>
