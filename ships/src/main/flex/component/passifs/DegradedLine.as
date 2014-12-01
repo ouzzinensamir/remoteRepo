@@ -6,6 +6,7 @@ package component.passifs
 	import flash.display.Shape;
 	
 	import mx.core.UIComponent;
+	import component.passifs.dto.TypesPassifComponent;
 
 	[Bindable]
 	public class DegradedLine extends Rail  

@@ -1,14 +1,15 @@
 package popups
 {
 	import component.passifs.DegradedLine;
+	import component.passifs.PointComp;
 	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.events.MouseEvent;
 
-	public class LinePopup extends GenericPopup
+	public class PointPopup extends GenericPopup
 	{
 		
-		public function LinePopup(definedX:int,definedY:int)
+		public function PointPopup(definedX:int,definedY:int)
 		{
 			this.definedX=definedX;
 			this.definedY=definedY;
@@ -18,12 +19,12 @@ package popups
 		override protected function updateDisplayList(
 			unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			super.currentState=TypesPassifComponent.LINE;
+			super.currentState=TypesPassifComponent.POINT;
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var line:DegradedLine=new DegradedLine(Number(x1Value.text),Number(y1Value.text),Number(x2Value.text),Number(y2Value.text));
-			line.drawComponentIn(terminal);
+			var pointComp:PointComp=new PointComp(Number(x1Value.text),Number(y1Value.text),Number(raduisValue.text));
+			pointComp.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}
 	}

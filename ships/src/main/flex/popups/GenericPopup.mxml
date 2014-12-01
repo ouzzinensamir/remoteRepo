@@ -7,11 +7,17 @@
 				width="500"
 				height="300"
 				creationComplete="init()">
+	<fx:Script>
+		<![CDATA[
+			import component.passifs.dto.TypesPassifComponent;
+		]]>
+	</fx:Script>
 	<s:states> 
 		<s:State name="DEFAULT"/> 
 		<s:State name="LINE"/> 
 		<s:State name="RAIL"/>
 		<s:State name="RECT"/>
+		<s:State name="POINT"/>
 	</s:states>
 	<fx:Script>
 		<![CDATA[
@@ -62,6 +68,11 @@
 						</mx:FormItem>
 						<mx:FormItem styleName="label" label="Y2 :" required="true" id="y2" >
 							<s:TextInput id="y2Value"/>
+						</mx:FormItem>
+					</mx:Form>
+					<mx:Form id="raduis" includeIn="POINT">
+						<mx:FormItem styleName="label" label="Raduis :" required="true" id="raduisLabel">
+							<s:TextInput id="raduisValue" text="5"/>
 						</mx:FormItem>
 					</mx:Form>
 					<mx:Form id="formDimension" includeIn="RECT">

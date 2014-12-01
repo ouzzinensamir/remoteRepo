@@ -2,7 +2,10 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   initialize="initializeHandler(event)" xmlns:component="component.*">
+					   xmlns:component="component.*"
+					   xmlns:local="*"
+					   xmlns:panzoom="org.rockholla.controls.panzoom.*"
+					   creationComplete="creationCompleteHandler(event)">
 	<fx:Declarations>
 	</fx:Declarations>
 	
@@ -11,8 +14,10 @@
 			import component.AbstractComponent;
 			
 			import mx.containers.TitleWindow;
+			import mx.controls.Alert;
 			import mx.controls.TextInput;
 			import mx.core.DragSource;
+			import mx.core.UIComponent;
 			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.DragManager;
@@ -20,9 +25,12 @@
 			
 			import popups.GenericPopup;
 			import popups.LinePopup;
+			import popups.PointPopup;
 			import popups.RailPopup;
 			import popups.RectPopup;
 			
+			public static const MAX_ZOOM:Number = 4;
+			public static const MIN_ZOOM:Number = 0.1;
 			
 			[Bindable]
 			private var echelle:String;
@@ -32,12 +40,14 @@
 			public var xfieldInput:TextInput;
 			public var yfieldInput:TextInput;
 			
-			private function initializeHandler(event:FlexEvent):void
+			private function creationCompleteHandler(event:FlexEvent):void
 			{
 				echelle = "Echelle : 1cm <-> 200m";
+				panzoom.addEventListener(DragEvent.DRAG_ENTER,dragEnterHandler);
+				panzoom.addEventListener(DragEvent.DRAG_DROP,dragDropHandler);
 			}
 			
-			private function mouveComponent(event:MouseEvent):void
+			private function selectComponent(event:MouseEvent):void
 			{
 				selectedImage = event.currentTarget as Image;
 				selectedImage.alpha = 0.6;
@@ -48,83 +58,87 @@
 			}
 			
 			// Called when the user moves the drag indicator onto the drop target.
-			private function dragEnterHandler(event:DragEvent):void {
-				// Accept the drag only if the user is dragging data 
-				// identified by the 'color' format value.
+			public function dragEnterHandler(event:DragEvent):void {
 				if (event.dragSource.hasFormat('idComponent')) {
-					// Get the drop target component from the event object.
-					var dropTarget:HBox=HBox(event.currentTarget);
 					// Accept the drop.
-					DragManager.acceptDragDrop(dropTarget);
+					DragManager.acceptDragDrop(event.target as UIComponent);
 				}
 			}
 					
 			// Called if the target accepts the dragged object and the user 
 			// releases the mouse button while over the Canvas container. 
-			private function dragDropHandler(event:DragEvent):void {
-				if (event.dragSource.hasFormat('idComponent')) {
+			public function dragDropHandler(event:DragEvent):void {
+				if (event.dragSource.hasFormat('idComponent')  ) {
 					var data:String = event.dragSource.dataForFormat('idComponent') as String;
-					if(data=="grid")
-					{
-						displayGrid();
-					}
-					if(data=="pain")
-					{
-						deleteGrid();
-					}
-					if(data=="rail")
-					{
-						callDrawer(event);
-					}
-					if(data=="rect")
-					{
-						callDrawer(event);
-					}
-					if(data=="line")
-					{
-						callDrawer(event);
+					switch(data){
+						case "grid" :
+							displayGrid();
+						case "pain" :
+							deleteGrid();
+						default :
+							openPopup(event);
 					}
 				}
+				
 			}    
 			
-			private function callDrawer(event:DragEvent):void
+			private function openPopup(event:DragEvent):void
 			{
-				var coordinates:GenericPopup;
-				var data:String = event.dragSource.dataForFormat('idComponent') as String;
-				var definedX:int=event.currentTarget.mouseX;
-				var definedY:int=event.currentTarget.mouseY;
-				if(data=="rail")
-					coordinates =  new RailPopup(definedX,definedY);
-				if(data=="rect")
-					coordinates =  new RectPopup(definedX,definedY);
-				if(data=="line")
-					coordinates =  new LinePopup(definedX,definedY);
+				var idComponent:String = event.dragSource.dataForFormat('idComponent') as String;
+				var coordinates:GenericPopup=createPopup(idComponent,event);
 				coordinates.terminal=terminal;
 				PopUpManager.addPopUp(coordinates,this,true);
 				PopUpManager.centerPopUp(coordinates);
 			}
 			
+			private function createPopup( idComponent:String,event:DragEvent):GenericPopup{
+				var definedX:int=event.currentTarget.mouseX;
+				var definedY:int=event.currentTarget.mouseY;
+				switch(idComponent){
+					case "rail":
+						return new RailPopup(definedX,definedY);
+					case "rect" :
+						return new RectPopup(definedX,definedY);
+					case "line" :
+						return new LinePopup(definedX,definedY);
+					case "point" :
+						return new PointPopup(definedX,definedY);
+					default :
+						return new GenericPopup();
+				}
+			}
+			
 			private function displayGrid():void
 			{
-				grid_terminal.visible = true;
 			}
 			private function deleteGrid():void
 			{
-				grid_terminal.visible = false;
 				terminal.graphics.clear();
 				terminal.removeAllElements();
 			}
 			
 			protected function terminal_mouseDownHandler(event:MouseEvent):void
 			{
-				var tedst:AbstractComponent=event.target as AbstractComponent ;
-				tedst.startDrag();
 			}
 			
 			protected function terminal_mouseUpHandler(event:MouseEvent):void
 			{
 				var tedst:AbstractComponent=event.target as AbstractComponent ;
-				tedst.stopDrag();
+				//tedst.stopDrag();
+			}
+			// The PanZoomComponent provides and event "zoom" for which you can set a callback
+			// whenever a zoom in or out happens.  Here, we're detecting a zoom from the component
+			// and setting the slider value accordingly
+			protected function _onZoom():void
+			{
+				
+			}
+			
+			// The PanZoomComponent provides an event "pan" for which you can set a callback
+			// whenever a pan happens
+			protected function _onPan():void
+			{
+				//trace("We're panning!!!");
 			}
 			
 		]]>
@@ -137,56 +151,60 @@
 				<mx:VBox width="100%" height="18%" backgroundColor="#F2F2F2" borderColor="#C0C0C0"
 						 borderStyle="solid">
 					<!-- First Part-->
-					<mx:HBox width="100%" height="50%"
-							 verticalAlign="middle" horizontalGap="3" horizontalAlign="right" paddingRight="10" >
-						<s:Image id="pain" mouseDown="mouveComponent(event)" 
+					<mx:HBox width="100%" height="50%" horizontalAlign="right" horizontalGap="3"
+							 paddingRight="10" verticalAlign="middle">
+						<s:Image id="pain" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/pain.png')" toolTip="Suppression"/>
 						<mx:VRule height="100%"/>
-						<s:Image id="grid" mouseDown="mouveComponent(event)" 
+						<s:Image id="grid" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/grid.jpg')" toolTip="Grid"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/back_left.png')"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/back_reight.png')"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/mouse.png')"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/copie.png')"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/remove.png')"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/refrech.png')"/>
 						<mx:VRule height="100%"/>
-						<s:Image id="stop" mouseDown="mouveComponent(event)" 
+						<s:Image id="stop" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/stop.png')" toolTip="Stop"/>
-						<s:Image id="line" mouseDown="mouveComponent(event)" 
+						<s:Image id="line" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/ligne.png')" toolTip="Ligne"/>
-						<s:Image id="parcking" mouseDown="mouveComponent(event)" 
+						<s:Image id="parcking" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/parcking.png')" toolTip="Parcking"/>
-						<s:Image id="point" mouseDown="mouveComponent(event)" 
+						<s:Image id="point" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/point.png')" toolTip="Point"/>
-						<s:Image id="triangle" mouseDown="mouveComponent(event)" 
+						<s:Image id="triangle" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/triangle.png')" toolTip="Triangle"/>
-						<s:Image id="rect" mouseDown="mouveComponent(event)" 
-								 source="@Embed(source = '/images/ractangle_mere.png')" toolTip="Rectangle"/>
-						<s:Image id="rectangle_vert" mouseDown="mouveComponent(event)" 
-								 source="@Embed(source = '/images/rectangle_vert.png')" toolTip="Rectangle"/>
-						<s:Image id="tringle_bizzar" mouseDown="mouveComponent(event)" 
-								 source="@Embed(source = '/images/triangle_bizzar.png')" toolTip="Triangle"/>
+						<s:Image id="rect" mouseDown="selectComponent(event)"
+								 source="@Embed(source = '/images/ractangle_mere.png')"
+								 toolTip="Rectangle"/>
+						<s:Image id="rectangle_vert" mouseDown="selectComponent(event)"
+								 source="@Embed(source = '/images/rectangle_vert.png')"
+								 toolTip="Rectangle"/>
+						<s:Image id="tringle_bizzar" mouseDown="selectComponent(event)"
+								 source="@Embed(source = '/images/triangle_bizzar.png')"
+								 toolTip="Triangle"/>
 						<mx:VRule height="100%"/>
-						<s:Image id="rail" mouseDown="mouveComponent(event)" 
+						<s:Image id="rail" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/rail.png')" toolTip="Rail"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/zenzibar.png')"/>
 					</mx:HBox>
 					<mx:HRule width="100%"/>
 					<!-- Second Part-->
-					<mx:HBox width="100%" height="50%" paddingRight="10" paddingLeft="10" verticalAlign="middle" horizontalAlign="right" horizontalGap="3">
-						<s:Image mouseDown="mouveComponent(event)" 
+					<mx:HBox width="100%" height="50%" horizontalAlign="right" horizontalGap="3"
+							 paddingLeft="10" paddingRight="10" verticalAlign="middle">
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/zoomInOut.png')"/>
 						<mx:VRule height="100%"/>
 						<s:Label fontSize="12" fontWeight="bold" text="Accés direct :"/>
@@ -208,38 +226,44 @@
 								<fx:String>Avion</fx:String>
 							</mx:ArrayCollection>
 						</s:DropDownList>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/okButton.jpg')" toolTip="OK"/>
 						<mx:VRule height="100%"/>
 						<mx:HBox width="20%">
 							
 						</mx:HBox>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/hand.jpg')"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/lock.jpg')"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/binoculars.jpg')"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/zoom_left.png')"/>
-						<s:Image mouseDown="mouveComponent(event)" 
+						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/zoom_reghit.png')"/>
 					</mx:HBox>
 				</mx:VBox>
 				<!--Terminal -->
-				<mx:HBox width="85%" height="72%" backgroundColor="#F2F2F2" borderColor="#000000"
-						 borderStyle="solid" dragEnter="dragEnterHandler(event)" dragDrop="dragDropHandler(event)">
-					<mx:Canvas>
-						<s:Image id="grid_terminal" visible="false" width="100%" height="100%"
-								 source="@Embed(source = '/images/terminal.jpg')"/>
-						<component:Terminal id="terminal" mouseUp="terminal_mouseUpHandler(event)" mouseDown="terminal_mouseDownHandler(event)" dragEnter="dragEnterHandler(event)" dragDrop="dragDropHandler(event)" />
-					</mx:Canvas>
+					<panzoom:PanZoomComponent id="panzoom" width="100%" height="100%"
+											  backgroundColor="0x807F7A" centerOnLoad="false"
+											  childPreventsPan="false" doubleClickZoomStep="1.5"
+											  fixedZoomPoint="{null}" initialZoomLevel="1"
+											  loadCenterPoint="{new Point(100, 100)}"
+											  mouseWheelZoomingEnabled="true" pan="this._onPan()"
+											  panScrollBarsVisible="true" scaleMax="{MAX_ZOOM}"
+											  scaleMin="{MIN_ZOOM}" zoom="this._onZoom()"
+											  zoomSpeed="1" zoomToCursor="true">
+						<local:CustomPanZoomContent>
+							<component:Terminal id="terminal"
+												mouseDown="terminal_mouseDownHandler(event)"/>
+						</local:CustomPanZoomContent>
+					</panzoom:PanZoomComponent>
 					
-				</mx:HBox>
 				<!-- stat bar -->
 				<mx:HBox width="100%" height="10%" backgroundColor="#7F7F7F">
 					<mx:HBox width="80%" height="100%" verticalAlign="middle">

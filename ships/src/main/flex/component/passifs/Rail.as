@@ -10,16 +10,17 @@ package component.passifs
 	
 	import mx.controls.Alert;
 	import mx.core.UIComponent;
+	import component.passifs.dto.RailCoordinates;
+	import component.passifs.dto.TypesPassifComponent;
 	
 
 	[Bindable]
 	public class Rail extends  AbstractComponent
 	{
-		protected var x1:int;
-		protected var y1:int;
 		protected var x2:int;
 		protected var y2:int;
 		protected var type:String;
+		private var shape:Shape = new Shape();
 
 		protected var effectiveGap:Number;
 		protected var separateGap:Number;
@@ -37,14 +38,15 @@ package component.passifs
 		}
 		
 		override public function drawComponentIn(terminal:Terminal):void{
-			var shape:Shape = new Shape();
 			var initStart:Point = new Point(x1, y1);
 			var initEnd:Point = new Point(x2, y2);
+			shape.graphics.clear();
 			shape.graphics.lineStyle(1.5, 0);
 			drawTwoParallelLines(shape,initStart,initEnd);
 			drawSeparateLines(shape,initStart,initEnd);
 			this.addChild(shape);
 			terminal.addChild(this);
+			super.drawComponentIn(terminal);
 		}
 		
 		private function drawTwoParallelLines(shape:Shape,initStart:Point,initEnd:Point):void{

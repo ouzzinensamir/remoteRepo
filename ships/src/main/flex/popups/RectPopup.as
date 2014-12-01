@@ -1,7 +1,7 @@
 package popups
 {
 	import component.passifs.Rectangle;
-	import component.passifs.TypesPassifComponent;
+	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.events.MouseEvent;
 

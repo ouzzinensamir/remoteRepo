@@ -1,4 +1,4 @@
-package component.passifs
+package component.passifs.dto
 {
 	import flash.geom.Point;
 
