@@ -4,13 +4,15 @@ package component
 	import mx.core.UIComponent;
 	import mx.events.DragEvent;
 	
+	import org.rockholla.controls.panzoom.PanZoomContent;
+	
 	
 	[Bindable]
 	public class  AbstractComponent extends UIComponent
 	{
 		protected var x1:int;
 		protected var y1:int;
-		public function drawComponentIn(terminal:Terminal):void{
+		public function drawComponentIn(terminal:PanZoomContent):void{
 			this.addEventListener(DragEvent.DRAG_ENTER,dragEnterHandler);
 			this.addEventListener(DragEvent.DRAG_EXIT,dragExitHandler);
 			//this.addEventListener(DragEvent.DRAG_DROP,(terminal.parentApplication as ships).dragDropHandler);

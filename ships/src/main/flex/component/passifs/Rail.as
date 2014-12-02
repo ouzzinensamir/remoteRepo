@@ -3,6 +3,8 @@ package component.passifs
 	
 	import component.AbstractComponent;
 	import component.Terminal;
+	import component.passifs.dto.RailCoordinates;
+	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.display.GraphicsPathCommand;
 	import flash.display.Shape;
@@ -10,8 +12,8 @@ package component.passifs
 	
 	import mx.controls.Alert;
 	import mx.core.UIComponent;
-	import component.passifs.dto.RailCoordinates;
-	import component.passifs.dto.TypesPassifComponent;
+	
+	import org.rockholla.controls.panzoom.PanZoomContent;
 	
 
 	[Bindable]
@@ -37,7 +39,7 @@ package component.passifs
 			this.separateGap=4;
 		}
 		
-		override public function drawComponentIn(terminal:Terminal):void{
+		override public function drawComponentIn(terminal:PanZoomContent):void{
 			var initStart:Point = new Point(x1, y1);
 			var initEnd:Point = new Point(x2, y2);
 			shape.graphics.clear();

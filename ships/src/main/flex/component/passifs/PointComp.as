@@ -2,12 +2,14 @@ package component.passifs
 {
 	import component.AbstractComponent;
 	import component.Terminal;
+	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.display.Shape;
 	
 	import mx.core.UIComponent;
 	import mx.events.DragEvent;
-	import component.passifs.dto.TypesPassifComponent;
+	
+	import org.rockholla.controls.panzoom.PanZoomContent;
 
 	[Bindable]
 	public class PointComp extends AbstractComponent
@@ -21,7 +23,7 @@ package component.passifs
 			this.raduisValue=raduisValue;
 			this.type=TypesPassifComponent.POINT;
 		}
-		override public function drawComponentIn(terminal:Terminal):void{
+		override public function drawComponentIn(terminal:PanZoomContent):void{
 			shape.graphics.clear();
 			shape.graphics.beginFill(0, 1.0);
 			shape.graphics.drawCircle(x1, y1,raduisValue);

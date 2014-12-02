@@ -18,14 +18,16 @@
 		<s:State name="RAIL"/>
 		<s:State name="RECT"/>
 		<s:State name="POINT"/>
+		<s:State name="TRAPEZOIDAL"/>
 	</s:states>
 	<fx:Script>
 		<![CDATA[
+			import org.rockholla.controls.panzoom.PanZoomContent;
 			import component.Terminal;
 			
 			import mx.managers.PopUpManager;
 			[Bindable]
-			public var terminal:Terminal;
+			public var terminal:PanZoomContent;
 			[Bindable]
 			public var definedX:int;
 			[Bindable]
@@ -75,18 +77,24 @@
 							<s:TextInput id="raduisValue" text="5"/>
 						</mx:FormItem>
 					</mx:Form>
-					<mx:Form id="formDimension" includeIn="RECT">
+					<mx:Form id="formDimension" includeIn="RECT,TRAPEZOIDAL">
 						<mx:FormItem styleName="label" label="Width :" required="true">
-							<s:TextInput id="widthComp"/>
+							<s:TextInput id="widthComp" text.TRAPEZOIDAL="15"/>
 						</mx:FormItem>
 						<mx:FormItem styleName="label" label="height :" required="true" >
-							<s:TextInput id="heightComp"/>
+							<s:TextInput id="heightComp" text.TRAPEZOIDAL="15"/>
 						</mx:FormItem>
 						<mx:FormItem styleName="label" label="Orientation :" required="true" >
-							<s:DropDownList id="orientation" selectedIndex="0"> 
+							<s:DropDownList id="orientation" selectedIndex="0" includeIn="RECT"> 
 								<mx:ArrayCollection>
 									<fx:String>Droite</fx:String>
 									<fx:String>Gauche</fx:String>
+								</mx:ArrayCollection>
+							</s:DropDownList>
+							<s:DropDownList id="deviation" selectedIndex="0" includeIn="TRAPEZOIDAL"> 
+								<mx:ArrayCollection>
+									<fx:String>Haut</fx:String>
+									<fx:String>Bas</fx:String>
 								</mx:ArrayCollection>
 							</s:DropDownList>
 						</mx:FormItem>

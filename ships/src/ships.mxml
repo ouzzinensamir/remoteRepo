@@ -23,22 +23,26 @@
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
 			
+			import org.granite.validation.constraints.Null;
+			
 			import popups.GenericPopup;
 			import popups.LinePopup;
 			import popups.PointPopup;
 			import popups.RailPopup;
 			import popups.RectPopup;
+			import popups.TrapezoidalPopup;
 			
-			public static const MAX_ZOOM:Number = 4;
-			public static const MIN_ZOOM:Number = 0.1;
+			public static const MAX_ZOOM:Number = 20;
+			public static const MIN_ZOOM:Number = 1;
 			
 			[Bindable]
 			private var echelle:String;
 			private var buttonClicked:Boolean;
 			private var selectedImage:Image;
-			public var myPopUp:TitleWindow;
 			public var xfieldInput:TextInput;
 			public var yfieldInput:TextInput;
+			[Bindable]
+			private var fixedZoomPoint:Point=null;
 			
 			private function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -73,8 +77,6 @@
 					switch(data){
 						case "grid" :
 							displayGrid();
-						case "pain" :
-							deleteGrid();
 						default :
 							openPopup(event);
 					}
@@ -98,11 +100,15 @@
 					case "rail":
 						return new RailPopup(definedX,definedY);
 					case "rect" :
-						return new RectPopup(definedX,definedY);
+						return new RectPopup(definedX,definedY,0x3366FF);
+					case "rectangle_vert" :
+						return new RectPopup(definedX,definedY,0x4BC439);
 					case "line" :
 						return new LinePopup(definedX,definedY);
 					case "point" :
 						return new PointPopup(definedX,definedY);
+					case "trapezoidal" :
+						return new TrapezoidalPopup(definedX,definedY);
 					default :
 						return new GenericPopup();
 				}
@@ -111,20 +117,34 @@
 			private function displayGrid():void
 			{
 			}
-			private function deleteGrid():void
+			private function cleanTerminal(event:MouseEvent):void
 			{
 				terminal.graphics.clear();
-				terminal.removeAllElements();
+				terminal.removeAllChildren();
 			}
 			
 			protected function terminal_mouseDownHandler(event:MouseEvent):void
 			{
+				var selectedX:int=event.currentTarget.mouseX;
+				var selectedY:int=event.currentTarget.mouseY;
+				fixedZoomPoint=new Point(selectedX,selectedY);
 			}
 			
 			protected function terminal_mouseUpHandler(event:MouseEvent):void
 			{
 				var tedst:AbstractComponent=event.target as AbstractComponent ;
 				//tedst.stopDrag();
+			}
+			
+			private function zommComponent():void{
+				panzoom.fixedZoomPoint=fixedZoomPoint;
+				var newScale:Number=panzoom.scale+1.5;
+				panzoom.scale=newScale>MAX_ZOOM ? MAX_ZOOM : newScale;
+			}
+			private function unZommComponent():void{
+				panzoom.fixedZoomPoint=fixedZoomPoint;
+				var newScale:Number=panzoom.scale-1.5;
+				panzoom.scale=newScale<MIN_ZOOM ? MIN_ZOOM : newScale;
 			}
 			// The PanZoomComponent provides and event "zoom" for which you can set a callback
 			// whenever a zoom in or out happens.  Here, we're detecting a zoom from the component
@@ -153,7 +173,7 @@
 					<!-- First Part-->
 					<mx:HBox width="100%" height="50%" horizontalAlign="right" horizontalGap="3"
 							 paddingRight="10" verticalAlign="middle">
-						<s:Image id="pain" mouseDown="selectComponent(event)"
+						<s:Image id="pain" mouseDown="selectComponent(event)" click="cleanTerminal(event)"
 								 source="@Embed(source = '/images/pain.png')" toolTip="Suppression"/>
 						<mx:VRule height="100%"/>
 						<s:Image id="grid" mouseDown="selectComponent(event)"
@@ -182,8 +202,8 @@
 								 source="@Embed(source = '/images/parcking.png')" toolTip="Parcking"/>
 						<s:Image id="point" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/point.png')" toolTip="Point"/>
-						<s:Image id="triangle" mouseDown="selectComponent(event)"
-								 source="@Embed(source = '/images/triangle.png')" toolTip="Triangle"/>
+						<s:Image id="trapezoidal" mouseDown="selectComponent(event)"
+								 source="@Embed(source = '/images/trapezoidal.png')" toolTip="Triangle"/>
 						<s:Image id="rect" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/ractangle_mere.png')"
 								 toolTip="Rectangle"/>
@@ -242,26 +262,23 @@
 						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/binoculars.jpg')"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="selectComponent(event)"
+						<s:Image click="unZommComponent()"
 								 source="@Embed(source = '/images/zoom_left.png')"/>
-						<s:Image mouseDown="selectComponent(event)"
+						<s:Image click="zommComponent()"
 								 source="@Embed(source = '/images/zoom_reghit.png')"/>
 					</mx:HBox>
 				</mx:VBox>
 				<!--Terminal -->
 					<panzoom:PanZoomComponent id="panzoom" width="100%" height="100%"
 											  backgroundColor="0x807F7A" centerOnLoad="false"
-											  childPreventsPan="false" doubleClickZoomStep="1.5"
+											  childPreventsPan="false"
 											  fixedZoomPoint="{null}" initialZoomLevel="1"
 											  loadCenterPoint="{new Point(100, 100)}"
 											  mouseWheelZoomingEnabled="true" pan="this._onPan()"
 											  panScrollBarsVisible="true" scaleMax="{MAX_ZOOM}"
 											  scaleMin="{MIN_ZOOM}" zoom="this._onZoom()"
-											  zoomSpeed="1" zoomToCursor="true">
-						<local:CustomPanZoomContent>
-							<component:Terminal id="terminal"
-												mouseDown="terminal_mouseDownHandler(event)"/>
-						</local:CustomPanZoomContent>
+											  zoomSpeed="2" zoomToCursor="true">
+						<local:CustomPanZoomContent id="terminal" mouseDown="terminal_mouseDownHandler(event)"/>
 					</panzoom:PanZoomComponent>
 					
 				<!-- stat bar -->
