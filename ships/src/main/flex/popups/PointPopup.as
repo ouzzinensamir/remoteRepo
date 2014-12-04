@@ -5,15 +5,30 @@ package popups
 	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.events.MouseEvent;
+	
+	import mx.events.FlexEvent;
 
 	public class PointPopup extends GenericPopup
 	{
 		
-		public function PointPopup(definedX:int,definedY:int)
+		public function PointPopup(definedX:int=0,definedY:int=0,pointComp:PointComp=null)
 		{
-			this.definedX=definedX;
-			this.definedY=definedY;
 			super();
+			if(pointComp==null){
+				this.definedX=definedX;
+				this.definedY=definedY;
+			}else{
+				this.currentComponent=pointComp;
+			}
+			this.addEventListener(FlexEvent.CREATION_COMPLETE, _onCreationComplete);
+		}
+		protected function _onCreationComplete(event:FlexEvent):void
+		{
+			if(this.currentComponent != null && currentComponent is PointComp){
+				this.x1Value.text=(currentComponent as PointComp).x1+"";
+				this.y1Value.text=(currentComponent as PointComp).y1+"";
+				this.raduisValue.text=(currentComponent as PointComp).raduisValue+"";
+			}
 		}
 		
 		override protected function updateDisplayList(

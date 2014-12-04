@@ -22,12 +22,16 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
+			import component.AbstractComponent;
 			import org.rockholla.controls.panzoom.PanZoomContent;
 			import component.Terminal;
 			
 			import mx.managers.PopUpManager;
 			[Bindable]
 			public var terminal:PanZoomContent;
+			
+			protected var currentComponent:AbstractComponent;
+			
 			[Bindable]
 			public var definedX:int;
 			[Bindable]
@@ -37,10 +41,14 @@
 				PopUpManager.centerPopUp(this);
 			}
 			protected function addNewComponent(event:MouseEvent):void{
+				if(currentComponent!= null){
+					terminal.removeChild(currentComponent);
+				}
 				close(event);
 			}
 			
 			public function close(event:Event):void{
+				currentComponent = null;
 				PopUpManager.removePopUp(this);
 			}
 			
@@ -61,7 +69,7 @@
 							<s:TextInput id="x1Value" text="{definedX}" enabled="false"/>
 						</mx:FormItem>
 						<mx:FormItem styleName="label" label="Y :" required="true" id="y1" >
-							<s:TextInput id="y1Value" text="{definedY}" enabled="false"/>
+							<s:TextInput id="y1Value" text="{definedY}"  enabled="false"/>
 						</mx:FormItem>
 					</mx:Form>
 					<mx:Form id="formPoint2" includeIn="LINE,RAIL">

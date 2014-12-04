@@ -7,14 +7,13 @@
 					   xmlns:panzoom="org.rockholla.controls.panzoom.*"
 					   creationComplete="creationCompleteHandler(event)">
 	<fx:Declarations>
+		<s:NumberFormatter id="formatNumber" fractionalDigits="2"/>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
 			import component.AbstractComponent;
 			
-			import mx.containers.TitleWindow;
-			import mx.controls.Alert;
 			import mx.controls.TextInput;
 			import mx.core.DragSource;
 			import mx.core.UIComponent;
@@ -22,8 +21,6 @@
 			import mx.events.FlexEvent;
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
-			
-			import org.granite.validation.constraints.Null;
 			
 			import popups.GenericPopup;
 			import popups.LinePopup;
@@ -37,7 +34,7 @@
 			
 			[Bindable]
 			private var echelle:String;
-			private var buttonClicked:Boolean;
+			
 			private var selectedImage:Image;
 			public var xfieldInput:TextInput;
 			public var yfieldInput:TextInput;
@@ -46,9 +43,14 @@
 			
 			private function creationCompleteHandler(event:FlexEvent):void
 			{
-				echelle = "Echelle : 1cm <-> 200m";
 				panzoom.addEventListener(DragEvent.DRAG_ENTER,dragEnterHandler);
 				panzoom.addEventListener(DragEvent.DRAG_DROP,dragDropHandler);
+				defineEchelle();
+			}
+			
+			private function defineEchelle():void{
+				var dim:Number= (terminal.width)*20/1500;
+				echelle=formatNumber.format(dim).toString()+ " m";
 			}
 			
 			private function selectComponent(event:MouseEvent):void
@@ -74,12 +76,7 @@
 			public function dragDropHandler(event:DragEvent):void {
 				if (event.dragSource.hasFormat('idComponent')  ) {
 					var data:String = event.dragSource.dataForFormat('idComponent') as String;
-					switch(data){
-						case "grid" :
-							displayGrid();
-						default :
-							openPopup(event);
-					}
+					openPopup(event);
 				}
 				
 			}    
@@ -114,26 +111,22 @@
 				}
 			}
 			
-			private function displayGrid():void
+			private function handelGrid():void
 			{
+					terminal.handelGrid();
 			}
 			private function cleanTerminal(event:MouseEvent):void
 			{
-				terminal.graphics.clear();
-				terminal.removeAllChildren();
-			}
-			
-			protected function terminal_mouseDownHandler(event:MouseEvent):void
-			{
-				var selectedX:int=event.currentTarget.mouseX;
-				var selectedY:int=event.currentTarget.mouseY;
-				fixedZoomPoint=new Point(selectedX,selectedY);
-			}
-			
-			protected function terminal_mouseUpHandler(event:MouseEvent):void
-			{
-				var tedst:AbstractComponent=event.target as AbstractComponent ;
-				//tedst.stopDrag();
+				var children:Array=terminal.getChildren();
+				if(children == null){
+					return ;
+				}
+				for (var index:int = 0; index < children.length; index++) {
+					var child:DisplayObject=children[index];
+					if(child is AbstractComponent){
+						terminal.removeChild(child);
+					}
+				}
 			}
 			
 			private function zommComponent():void{
@@ -161,22 +154,31 @@
 				//trace("We're panning!!!");
 			}
 			
+			private function changeScreenState(event:MouseEvent):void
+			{
+				if(stage.displayState == StageDisplayState.NORMAL)
+					stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				else
+					stage.displayState =StageDisplayState.NORMAL;
+			}
+			
 		]]>
 	</fx:Script>
 		<!--Container -->
 		<s:HGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-			<mx:VBox width="650" height="500" borderColor="#C0C0C0" borderStyle="solid"
+			<mx:VBox width="100%" height="100%" borderColor="#C0C0C0" borderStyle="solid"
 					 horizontalAlign="center" verticalAlign="middle">
+				<s:Spacer height="1%"/>
 				<!--Tools Bar -->
-				<mx:VBox width="100%" height="18%" backgroundColor="#F2F2F2" borderColor="#C0C0C0"
+				<mx:VBox width="98%" height="15%" backgroundColor="#F2F2F2" borderColor="#C0C0C0"
 						 borderStyle="solid">
 					<!-- First Part-->
-					<mx:HBox width="100%" height="50%" horizontalAlign="right" horizontalGap="3"
-							 paddingRight="10" verticalAlign="middle">
-						<s:Image id="pain" mouseDown="selectComponent(event)" click="cleanTerminal(event)"
+					<mx:HBox width="100%" height="50%" horizontalAlign="right" paddingRight="10" horizontalGap="4" verticalAlign="middle">
+						<s:Image id="pain" click="cleanTerminal(event)"
+								 mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/pain.png')" toolTip="Suppression"/>
 						<mx:VRule height="100%"/>
-						<s:Image id="grid" mouseDown="selectComponent(event)"
+						<s:Image id="grid" click="handelGrid()"
 								 source="@Embed(source = '/images/grid.jpg')" toolTip="Grid"/>
 						<mx:VRule height="100%"/>
 						<s:Image mouseDown="selectComponent(event)"
@@ -203,7 +205,8 @@
 						<s:Image id="point" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/point.png')" toolTip="Point"/>
 						<s:Image id="trapezoidal" mouseDown="selectComponent(event)"
-								 source="@Embed(source = '/images/trapezoidal.png')" toolTip="Triangle"/>
+								 source="@Embed(source = '/images/trapezoidal.png')"
+								 toolTip="Triangle"/>
 						<s:Image id="rect" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/ractangle_mere.png')"
 								 toolTip="Rectangle"/>
@@ -223,9 +226,13 @@
 					<mx:HRule width="100%"/>
 					<!-- Second Part-->
 					<mx:HBox width="100%" height="50%" horizontalAlign="right" horizontalGap="3"
-							 paddingLeft="10" paddingRight="10" verticalAlign="middle">
-						<s:Image mouseDown="selectComponent(event)"
-								 source="@Embed(source = '/images/zoomInOut.png')"/>
+							 paddingRight="10" verticalAlign="middle">
+						<s:Image click="unZommComponent()"
+								 source="@Embed(source = '/images/zoom-.jpg')"/>
+						<s:Image click="zommComponent()"
+								 source="@Embed(source = '/images/zoom+.jpg')"/>
+						<s:Image click="changeScreenState(event)"
+								 source="@Embed(source = '/images/state.jpg')"/>
 						<mx:VRule height="100%"/>
 						<s:Label fontSize="12" fontWeight="bold" text="Accés direct :"/>
 						<s:DropDownList width="20%" selectedIndex="0"> 
@@ -269,29 +276,34 @@
 					</mx:HBox>
 				</mx:VBox>
 				<!--Terminal -->
-					<panzoom:PanZoomComponent id="panzoom" width="100%" height="100%"
-											  backgroundColor="0x807F7A" centerOnLoad="false"
-											  childPreventsPan="false"
-											  fixedZoomPoint="{null}" initialZoomLevel="1"
+				<s:Spacer height="1%"/>
+				<mx:HBox width="100%" height="80%" horizontalAlign="center" verticalAlign="middle">
+					<panzoom:PanZoomComponent id="panzoom" width="95%" height="100%"
+											  backgroundColor="#F2F2F2"  centerOnLoad="false"
+											  childPreventsPan="false" fixedZoomPoint="{null}"
+											  initialZoomLevel="1"
 											  loadCenterPoint="{new Point(100, 100)}"
 											  mouseWheelZoomingEnabled="true" pan="this._onPan()"
 											  panScrollBarsVisible="true" scaleMax="{MAX_ZOOM}"
-											  scaleMin="{MIN_ZOOM}" zoom="this._onZoom()"
-											  zoomSpeed="2" zoomToCursor="true">
-						<local:CustomPanZoomContent id="terminal" mouseDown="terminal_mouseDownHandler(event)"/>
+											  scaleMin="{MIN_ZOOM}" zoom="this._onZoom()" panOff="true"
+											  zoomSpeed="2" zoomToCursor="true" >
+						<local:TerminalContent id="terminal" />
 					</panzoom:PanZoomComponent>
-					
+				</mx:HBox>	
+				<s:Spacer height="0.5%"/>
 				<!-- stat bar -->
-				<mx:HBox width="100%" height="10%" backgroundColor="#7F7F7F">
+				<mx:HBox width="98%" height="5%" backgroundColor="#7F7F7F" horizontalAlign="center"
+						 verticalAlign="middle">
 					<mx:HBox width="80%" height="100%" verticalAlign="middle">
 						<s:Label color="#FFFFFF" fontSize="12" fontWeight="bold" paddingLeft="9"
-								 text="{echelle}"/>
+								 text="Echelle: 1cm &lt;&gt; {echelle}"/>
 					</mx:HBox>
 					<mx:HBox width="20%" height="100%" horizontalAlign="right" verticalAlign="middle">
 						<s:Label color="#FFFFFF" fontSize="12" fontWeight="bold" paddingRight="9"
-								 text="Coordonnées : (300,400)"/>
+								 text="Coordonnées:({terminal.coordonneX};{terminal.coordonneY})"/>
 					</mx:HBox>
 				</mx:HBox>
+				<s:Spacer height="1%"/>
 			</mx:VBox>
 		</s:HGroup>
 

@@ -10,16 +10,19 @@ package component.passifs
 	import mx.events.DragEvent;
 	
 	import org.rockholla.controls.panzoom.PanZoomContent;
+	
+	import popups.GenericPopup;
+	import popups.TrapezoidalPopup;
 
 	[Bindable]
 	public class Trapezoidal extends AbstractComponent
 	{
-		protected var widthComp:int;
-		protected var heightComp:int;
-		protected var type:String;
+		public var widthComp:int;
+		public var heightComp:int;
+		public var orientation:String;
 		private var shape:Shape = new Shape();
 		private var deviation:Number;
-		private var orientation:String;
+		protected var type:String;
 		public function Trapezoidal(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String){
 			this.x1=x1;
 			this.y1=y1;
@@ -37,6 +40,9 @@ package component.passifs
 			this.addChild(shape);
 			terminal.addChild(this);
 			super.drawComponentIn(terminal);
+		}
+		override public function createPopup():GenericPopup{
+			return new TrapezoidalPopup(0,0,this);
 		}
 		private function createTrapezoidalWithOrientationHaut():void{
 			shape.graphics.moveTo(x1,y1);

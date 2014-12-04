@@ -15,14 +15,17 @@ package component.passifs
 	
 	import org.rockholla.controls.panzoom.PanZoomContent;
 	
+	import popups.GenericPopup;
+	import popups.RailPopup;
+	
 
 	[Bindable]
 	public class Rail extends  AbstractComponent
 	{
-		protected var x2:int;
-		protected var y2:int;
-		protected var type:String;
-		private var shape:Shape = new Shape();
+		public var x2:int;
+		public var y2:int;
+		public var type:String;
+		public var shape:Shape = new Shape();
 
 		protected var effectiveGap:Number;
 		protected var separateGap:Number;
@@ -49,6 +52,16 @@ package component.passifs
 			this.addChild(shape);
 			terminal.addChild(this);
 			super.drawComponentIn(terminal);
+		}
+		
+		override public function createPopup():GenericPopup{
+			return new RailPopup(0,0,this);
+		}
+		
+		override public function updateCoordinates(newX:int,newY:int):void{
+			super.updateCoordinates(newX,newY);
+			this.x2=this.x2+newX;
+			this.y2=this.y2+newX;
 		}
 		
 		private function drawTwoParallelLines(shape:Shape,initStart:Point,initEnd:Point):void{
@@ -110,5 +123,6 @@ package component.passifs
 			var bottomEnd:Point = new Point(initEnd.x + bottomOffsetX, initEnd.y + bottomOffsetY);
 			return new RailCoordinates(topStart,topEnd,bottomStart,bottomEnd);
 		}
+		
 	}
 }

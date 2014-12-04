@@ -10,11 +10,14 @@ package component.passifs
 	import mx.events.DragEvent;
 	
 	import org.rockholla.controls.panzoom.PanZoomContent;
+	
+	import popups.GenericPopup;
+	import popups.PointPopup;
 
 	[Bindable]
 	public class PointComp extends AbstractComponent
 	{
-		private var raduisValue:Number;
+		public var raduisValue:Number;
 		protected var type:String;
 		private var shape:Shape = new Shape();
 		public function PointComp(x1:int,y1:int,raduisValue:Number){
@@ -32,5 +35,9 @@ package component.passifs
 			terminal.addChild(this);
 			super.drawComponentIn(terminal);
 		}
+		override public function createPopup():GenericPopup{
+			return new PointPopup(0,0,this);
+		}
+		
 	}
 }

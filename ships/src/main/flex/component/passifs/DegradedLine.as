@@ -2,11 +2,14 @@ package component.passifs
 {
 	import component.AbstractComponent;
 	import component.Terminal;
+	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.display.Shape;
 	
 	import mx.core.UIComponent;
-	import component.passifs.dto.TypesPassifComponent;
+	
+	import popups.GenericPopup;
+	import popups.LinePopup;
 
 	[Bindable]
 	public class DegradedLine extends Rail  
@@ -27,6 +30,9 @@ package component.passifs
 			return currentIndex/maxInterpolation;
 		}
 		
+		override public function createPopup():GenericPopup{
+			return new LinePopup(0,0,this);
+		}
 		
 	}
 }
