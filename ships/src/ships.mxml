@@ -38,8 +38,6 @@
 			private var selectedImage:Image;
 			public var xfieldInput:TextInput;
 			public var yfieldInput:TextInput;
-			[Bindable]
-			private var fixedZoomPoint:Point=null;
 			
 			private function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -117,27 +115,28 @@
 			}
 			private function cleanTerminal(event:MouseEvent):void
 			{
-				var children:Array=terminal.getChildren();
-				if(children == null){
-					return ;
-				}
-				for (var index:int = 0; index < children.length; index++) {
-					var child:DisplayObject=children[index];
-					if(child is AbstractComponent){
-						terminal.removeChild(child);
-					}
-				}
+				terminal.clean();
 			}
 			
 			private function zommComponent():void{
-				panzoom.fixedZoomPoint=fixedZoomPoint;
+				panzoom.fixedZoomPoint=spyFixedZoomPoint();
 				var newScale:Number=panzoom.scale+1.5;
 				panzoom.scale=newScale>MAX_ZOOM ? MAX_ZOOM : newScale;
 			}
 			private function unZommComponent():void{
-				panzoom.fixedZoomPoint=fixedZoomPoint;
+				panzoom.fixedZoomPoint=spyFixedZoomPoint();
 				var newScale:Number=panzoom.scale-1.5;
 				panzoom.scale=newScale<MIN_ZOOM ? MIN_ZOOM : newScale;
+			}
+			
+			private function removeComponent():void {
+				terminal.removeSelectedComponent();
+			}
+			
+			private function spyFixedZoomPoint():Point{
+				var selectedComponent:AbstractComponent=terminal.selectedComponent;
+				return selectedComponent != null ?//
+					new Point(selectedComponent.x1,selectedComponent.y1) :null;
 			}
 			// The PanZoomComponent provides and event "zoom" for which you can set a callback
 			// whenever a zoom in or out happens.  Here, we're detecting a zoom from the component
@@ -191,7 +190,7 @@
 						<mx:VRule height="100%"/>
 						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/copie.png')"/>
-						<s:Image mouseDown="selectComponent(event)"
+						<s:Image click="removeComponent()"
 								 source="@Embed(source = '/images/remove.png')"/>
 						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/refrech.png')"/>

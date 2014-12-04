@@ -2,16 +2,12 @@ package component.passifs
 {
 	
 	import component.AbstractComponent;
-	import component.Terminal;
 	import component.passifs.dto.RailCoordinates;
 	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.display.GraphicsPathCommand;
 	import flash.display.Shape;
 	import flash.geom.Point;
-	
-	import mx.controls.Alert;
-	import mx.core.UIComponent;
 	
 	import org.rockholla.controls.panzoom.PanZoomContent;
 	

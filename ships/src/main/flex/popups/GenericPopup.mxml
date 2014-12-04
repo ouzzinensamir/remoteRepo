@@ -24,7 +24,6 @@
 		<![CDATA[
 			import component.AbstractComponent;
 			import org.rockholla.controls.panzoom.PanZoomContent;
-			import component.Terminal;
 			
 			import mx.managers.PopUpManager;
 			[Bindable]

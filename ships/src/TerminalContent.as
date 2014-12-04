@@ -2,10 +2,9 @@ package
 {
 	import component.AbstractComponent;
 	
+	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.events.MouseEvent;
-	
-	import flashx.textLayout.operations.CopyOperation;
 	
 	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
@@ -23,6 +22,8 @@ package
 		public var coordonneY:String;
 		
 		private var componentGrid:UIComponent;
+		
+		public var selectedComponent:AbstractComponent;
 		
 		public function TerminalContent()
 		{
@@ -52,25 +53,38 @@ package
 			super._drawContent(isRedraw);
 		}
 		
+		public function clean():void{
+			var children:Array=this.getChildren();
+			if(children == null){
+				return ;
+			}
+			for (var index:int = 0; index < children.length; index++) {
+				var child:DisplayObject=children[index];
+				if(child is AbstractComponent){
+					this.removeChild(child);
+				}
+			}
+		}
+		
+		
 		private function _onMouseDown(event:MouseEvent):void
 		{
-			var dragInitiator:AbstractComponent;				
-			if(event.target as AbstractComponent!=null){
-				dragInitiator=event.target as AbstractComponent;
-				dragInitiator.startDrag(false);
+			if(event.target!=null && event.target is AbstractComponent){
+				selectedComponent=event.target as AbstractComponent;
+				selectedComponent.startDrag(false);
 			}
 			
 		}
 		
 		private function _onMouseUp(event:MouseEvent):void
 		{
-			var dragInitiator:AbstractComponent;
-			if(event.target as AbstractComponent!=null){
-				dragInitiator=event.target as AbstractComponent;
-				var newX:int=dragInitiator.x;
-				var newY:int=dragInitiator.y;
-				dragInitiator.updateCoordinates(newX,newY);
-				dragInitiator.stopDrag();
+			
+			if(event.target!=null && event.target is AbstractComponent){
+				selectedComponent=event.target as AbstractComponent;
+				var newX:int=selectedComponent.x;
+				var newY:int=selectedComponent.y;
+				//dragInitiator.updateCoordinates(newX,newY);
+				selectedComponent.stopDrag();
 			}
 		}
 		
@@ -97,7 +111,24 @@ package
 			
 		}
 		
-		public function drawPanZoomContentGrid():void 
+		
+		public function handelGrid():void{
+			if(componentGrid !=null){
+				this.removeChild(componentGrid);
+				componentGrid=null;
+				return;
+			}
+			drawPanZoomContentGrid();
+		}
+		
+		public function removeSelectedComponent():void{
+			if(selectedComponent != null){
+				this.removeChild(selectedComponent);
+				selectedComponent =null;
+			}
+		}
+		
+		private function drawPanZoomContentGrid():void 
 		{
 			var xAt:int = 0;
 			var yAt:int = 0;
@@ -121,14 +152,6 @@ package
 			componentGrid=new UIComponent();
 			componentGrid.addChild(shapeGrid);
 			this.addChild(componentGrid);
-		}
-		public function handelGrid():void{
-			if(componentGrid !=null){
-				this.removeChild(componentGrid);
-				componentGrid=null;
-				return;
-			}
-			drawPanZoomContentGrid();
 		}
 		
 	}

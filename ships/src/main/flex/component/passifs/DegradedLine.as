@@ -1,12 +1,6 @@
 package component.passifs
 {
-	import component.AbstractComponent;
-	import component.Terminal;
 	import component.passifs.dto.TypesPassifComponent;
-	
-	import flash.display.Shape;
-	
-	import mx.core.UIComponent;
 	
 	import popups.GenericPopup;
 	import popups.LinePopup;
