@@ -10,13 +10,13 @@ package popups
 
 	public class NicheReeferPopup extends GenericPopup
 	{
-		public function NicheReeferPopup(definedX:int=0,definedY:int=0,trapezoidal:NicheReefer=null)
+		public function NicheReeferPopup(definedX:int=0,definedY:int=0,nicheReefer:NicheReefer=null)
 		{
-			if(trapezoidal==null){
+			if(nicheReefer==null){
 				this.definedX=definedX;
 				this.definedY=definedY;
 			}else{
-				this.currentComponent=trapezoidal;
+				this.currentComponent=nicheReefer;
 				
 			}
 			super();
@@ -41,9 +41,9 @@ package popups
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var trapezoidal:NicheReefer=new NicheReefer(Number(x1Value.text),Number(y1Value.text),
+			var nicheReefer:NicheReefer=new NicheReefer(Number(x1Value.text),Number(y1Value.text),
 				Number(widthComp.text),Number(heightComp.text),deviation.selectedItem as String);
-			trapezoidal.drawComponentIn(terminal);
+			nicheReefer.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}
 	}

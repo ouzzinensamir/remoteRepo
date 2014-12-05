@@ -138,7 +138,7 @@ package
 			}
 		}
 		
-		public function collerSelectedComponent(definedX:int,definedY:int):void{
+		public function pasteSelectedComponent(definedX:int,definedY:int):void{
 			if(selectedComponent != null){
 				var newComponent:AbstractComponent=selectedComponent.clone(definedX,definedY);
 				newComponent.drawComponentIn(this);

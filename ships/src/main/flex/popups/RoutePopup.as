@@ -9,14 +9,14 @@ package popups
 
 	public class RoutePopup extends GenericPopup
 	{
-		public function RoutePopup(definedX:int=0,definedY:int=0,line:Route=null)
+		public function RoutePopup(definedX:int=0,definedY:int=0,route:Route=null)
 		{
 			super();
-			if(line==null){
+			if(route==null){
 				this.definedX=definedX;
 				this.definedY=definedY;
 			}else{
-				this.currentComponent=line;
+				this.currentComponent=route;
 			}
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, _onCreationComplete);
 		}
@@ -36,8 +36,8 @@ package popups
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var line:Route=new Route(Number(x1Value.text),Number(y1Value.text),Number(x2Value.text),Number(y2Value.text));
-			line.drawComponentIn(terminal);
+			var route:Route=new Route(Number(x1Value.text),Number(y1Value.text),Number(x2Value.text),Number(y2Value.text));
+			route.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}
 	}

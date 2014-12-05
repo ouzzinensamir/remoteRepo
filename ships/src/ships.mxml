@@ -76,8 +76,8 @@
 				if (event.dragSource.hasFormat('idComponent')  ) {
 					var data:String = event.dragSource.dataForFormat('idComponent') as String;
 					switch(data){
-						case "copier" :
-							collerSelectedComponent(event);
+						case "paste" :
+							pasteSelectedComponent(event);
 							break;
 						default :
 							openPopup(event);
@@ -88,10 +88,10 @@
 				
 			}    
 			
-			private function collerSelectedComponent(event:DragEvent):void{
+			private function pasteSelectedComponent(event:DragEvent):void{
 				var definedX:int=event.currentTarget.mouseX;
 				var definedY:int=event.currentTarget.mouseY;
-				terminal.collerSelectedComponent(definedX,definedY);
+				terminal.pasteSelectedComponent(definedX,definedY);
 			}
 			
 			private function openPopup(event:DragEvent):void
@@ -197,7 +197,7 @@
 						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/mouse.png')"/>
 						<mx:VRule height="100%"/>
-						<s:Image id="copier" mouseDown="selectComponent(event)"
+						<s:Image id="paste" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/copie.png')"/>
 						<s:Image click="removeComponent()"
 								 source="@Embed(source = '/images/remove.png')"/>

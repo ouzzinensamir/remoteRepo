@@ -10,15 +10,15 @@ package popups
 	public class SpacePopup extends GenericPopup
 	{
 		private var color:uint;
-		public function SpacePopup(definedX:int=0,definedY:int=0,color:uint=0,rectangle:Space=null)
+		public function SpacePopup(definedX:int=0,definedY:int=0,color:uint=0,space:Space=null)
 		{
 			super();
-			if(rectangle==null){
+			if(space==null){
 				this.definedX=definedX;
 				this.definedY=definedY;
 				this.color=color;
 			}else{
-				this.currentComponent=rectangle;
+				this.currentComponent=space;
 				
 			}
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, _onCreationComplete);

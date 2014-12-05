@@ -11,14 +11,14 @@ package popups
 	public class ElectricPylonPopup extends GenericPopup
 	{
 		
-		public function ElectricPylonPopup(definedX:int=0,definedY:int=0,pointComp:ElectricPylon=null)
+		public function ElectricPylonPopup(definedX:int=0,definedY:int=0,electricPylon:ElectricPylon=null)
 		{
 			super();
-			if(pointComp==null){
+			if(electricPylon==null){
 				this.definedX=definedX;
 				this.definedY=definedY;
 			}else{
-				this.currentComponent=pointComp;
+				this.currentComponent=electricPylon;
 			}
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, _onCreationComplete);
 		}
@@ -38,8 +38,8 @@ package popups
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var pointComp:ElectricPylon=new ElectricPylon(Number(x1Value.text),Number(y1Value.text),Number(raduisValue.text));
-			pointComp.drawComponentIn(terminal);
+			var electricPylon:ElectricPylon=new ElectricPylon(Number(x1Value.text),Number(y1Value.text),Number(raduisValue.text));
+			electricPylon.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}
 	}
