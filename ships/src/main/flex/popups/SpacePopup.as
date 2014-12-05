@@ -1,16 +1,16 @@
 package popups
 {
-	import component.passifs.Rectangle;
+	import component.passifs.Space;
 	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.events.MouseEvent;
 	
 	import mx.events.FlexEvent;
 
-	public class RectPopup extends GenericPopup
+	public class SpacePopup extends GenericPopup
 	{
 		private var color:uint;
-		public function RectPopup(definedX:int=0,definedY:int=0,color:uint=0,rectangle:Rectangle=null)
+		public function SpacePopup(definedX:int=0,definedY:int=0,color:uint=0,rectangle:Space=null)
 		{
 			super();
 			if(rectangle==null){
@@ -25,24 +25,24 @@ package popups
 		}
 		protected function _onCreationComplete(event:FlexEvent):void
 		{
-			if(this.currentComponent != null && currentComponent is Rectangle){
-				this.x1Value.text=(currentComponent as Rectangle).x1+"";
-				this.y1Value.text=(currentComponent as Rectangle).y1+"";
-				this.widthComp.text=(currentComponent as Rectangle).widthComp+"";
-				this.heightComp.text=(currentComponent as Rectangle).heightComp+"";
-				this.color=(currentComponent as Rectangle).color;
-				this.orientation.selectedItem=(currentComponent as Rectangle).orientation;
+			if(this.currentComponent != null && currentComponent is Space){
+				this.x1Value.text=(currentComponent as Space).x1+"";
+				this.y1Value.text=(currentComponent as Space).y1+"";
+				this.widthComp.text=(currentComponent as Space).widthComp+"";
+				this.heightComp.text=(currentComponent as Space).heightComp+"";
+				this.color=(currentComponent as Space).color;
+				this.orientation.selectedItem=(currentComponent as Space).orientation;
 			}
 		}
 		
 		override protected function updateDisplayList(
 			unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			super.currentState=TypesPassifComponent.RECTANGLE;
+			super.currentState=TypesPassifComponent.SPACE;
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var rectangle:Rectangle=new Rectangle(Number(x1Value.text),Number(y1Value.text),
+			var rectangle:Space=new Space(Number(x1Value.text),Number(y1Value.text),
 				Number(widthComp.text),Number(heightComp.text),orientation.selectedItem as String,color);
 			rectangle.drawComponentIn(terminal);
 			super.addNewComponent(event);

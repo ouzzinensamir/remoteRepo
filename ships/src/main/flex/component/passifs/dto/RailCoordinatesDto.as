@@ -2,14 +2,14 @@ package component.passifs.dto
 {
 	import flash.geom.Point;
 
-	public class RailCoordinates
+	public class RailCoordinatesDto
 	{
 		private var _topStart:Point;
 		private var _topEnd:Point;
 		private var _bottomStart:Point;
 		private var _bottomEnd:Point;
 		
-		public function RailCoordinates(topStart:Point,topEnd:Point,bottomStart:Point,bottomEnd:Point)
+		public function RailCoordinatesDto(topStart:Point,topEnd:Point,bottomStart:Point,bottomEnd:Point)
 		{
 			this._topStart=topStart;
 			this._topEnd=topEnd;

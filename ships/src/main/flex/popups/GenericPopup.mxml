@@ -14,11 +14,11 @@
 	</fx:Script>
 	<s:states> 
 		<s:State name="DEFAULT"/> 
-		<s:State name="LINE"/> 
+		<s:State name="ROUTE"/> 
 		<s:State name="RAIL"/>
-		<s:State name="RECT"/>
-		<s:State name="POINT"/>
-		<s:State name="TRAPEZOIDAL"/>
+		<s:State name="SPACE"/>
+		<s:State name="ELECTRIC_PYLON"/>
+		<s:State name="NICHE_REEFER"/>
 	</s:states>
 	<fx:Script>
 		<![CDATA[
@@ -71,7 +71,7 @@
 							<s:TextInput id="y1Value" text="{definedY}"  enabled="false"/>
 						</mx:FormItem>
 					</mx:Form>
-					<mx:Form id="formPoint2" includeIn="LINE,RAIL">
+					<mx:Form id="formPoint2" includeIn="ROUTE,RAIL">
 						<mx:FormItem styleName="label" label="X2 :" required="true" id="x2">
 							<s:TextInput id="x2Value"/>
 						</mx:FormItem>
@@ -79,26 +79,26 @@
 							<s:TextInput id="y2Value"/>
 						</mx:FormItem>
 					</mx:Form>
-					<mx:Form id="raduis" includeIn="POINT">
+					<mx:Form id="raduis" includeIn="ELECTRIC_PYLON">
 						<mx:FormItem styleName="label" label="Raduis :" required="true" id="raduisLabel">
 							<s:TextInput id="raduisValue" text="5"/>
 						</mx:FormItem>
 					</mx:Form>
-					<mx:Form id="formDimension" includeIn="RECT,TRAPEZOIDAL">
+					<mx:Form id="formDimension" includeIn="SPACE,NICHE_REEFER">
 						<mx:FormItem styleName="label" label="Width :" required="true">
-							<s:TextInput id="widthComp" text.TRAPEZOIDAL="15"/>
+							<s:TextInput id="widthComp" text.NICHE_REEFER="15"/>
 						</mx:FormItem>
 						<mx:FormItem styleName="label" label="height :" required="true" >
-							<s:TextInput id="heightComp" text.TRAPEZOIDAL="15"/>
+							<s:TextInput id="heightComp" text.NICHE_REEFER="15"/>
 						</mx:FormItem>
 						<mx:FormItem styleName="label" label="Orientation :" required="true" >
-							<s:DropDownList id="orientation" selectedIndex="0" includeIn="RECT"> 
+							<s:DropDownList id="orientation" selectedIndex="0" includeIn="SPACE"> 
 								<mx:ArrayCollection>
 									<fx:String>Droite</fx:String>
 									<fx:String>Gauche</fx:String>
 								</mx:ArrayCollection>
 							</s:DropDownList>
-							<s:DropDownList id="deviation" selectedIndex="0" includeIn="TRAPEZOIDAL"> 
+							<s:DropDownList id="deviation" selectedIndex="0" includeIn="NICHE_REEFER"> 
 								<mx:ArrayCollection>
 									<fx:String>Haut</fx:String>
 									<fx:String>Bas</fx:String>

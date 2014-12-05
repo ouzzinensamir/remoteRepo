@@ -13,6 +13,7 @@
 	<fx:Script>
 		<![CDATA[
 			import component.AbstractComponent;
+			import component.passifs.dto.TypesPassifComponent;
 			
 			import mx.controls.TextInput;
 			import mx.core.DragSource;
@@ -22,12 +23,12 @@
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
 			
+			import popups.ElectricPylonPopup;
 			import popups.GenericPopup;
-			import popups.LinePopup;
-			import popups.PointPopup;
+			import popups.NicheReeferPopup;
 			import popups.RailPopup;
-			import popups.RectPopup;
-			import popups.TrapezoidalPopup;
+			import popups.RoutePopup;
+			import popups.SpacePopup;
 			
 			public static const MAX_ZOOM:Number = 20;
 			public static const MIN_ZOOM:Number = 1;
@@ -74,10 +75,24 @@
 			public function dragDropHandler(event:DragEvent):void {
 				if (event.dragSource.hasFormat('idComponent')  ) {
 					var data:String = event.dragSource.dataForFormat('idComponent') as String;
-					openPopup(event);
+					switch(data){
+						case "copier" :
+							collerSelectedComponent(event);
+							break;
+						default :
+							openPopup(event);
+							break;
+					}
+					
 				}
 				
 			}    
+			
+			private function collerSelectedComponent(event:DragEvent):void{
+				var definedX:int=event.currentTarget.mouseX;
+				var definedY:int=event.currentTarget.mouseY;
+				terminal.collerSelectedComponent(definedX,definedY);
+			}
 			
 			private function openPopup(event:DragEvent):void
 			{
@@ -92,18 +107,18 @@
 				var definedX:int=event.currentTarget.mouseX;
 				var definedY:int=event.currentTarget.mouseY;
 				switch(idComponent){
-					case "rail":
+					case TypesPassifComponent.RAIL:
 						return new RailPopup(definedX,definedY);
 					case "rect" :
-						return new RectPopup(definedX,definedY,0x3366FF);
+						return new SpacePopup(definedX,definedY,0x3366FF);
 					case "rectangle_vert" :
-						return new RectPopup(definedX,definedY,0x4BC439);
-					case "line" :
-						return new LinePopup(definedX,definedY);
-					case "point" :
-						return new PointPopup(definedX,definedY);
-					case "trapezoidal" :
-						return new TrapezoidalPopup(definedX,definedY);
+						return new SpacePopup(definedX,definedY,0x4BC439);
+					case TypesPassifComponent.ROUTE :
+						return new RoutePopup(definedX,definedY);
+					case TypesPassifComponent.ELECTRIC_PYLON :
+						return new ElectricPylonPopup(definedX,definedY);
+					case TypesPassifComponent.NICHE_REEFER :
+						return new NicheReeferPopup(definedX,definedY);
 					default :
 						return new GenericPopup();
 				}
@@ -138,19 +153,13 @@
 				return selectedComponent != null ?//
 					new Point(selectedComponent.x1,selectedComponent.y1) :null;
 			}
-			// The PanZoomComponent provides and event "zoom" for which you can set a callback
-			// whenever a zoom in or out happens.  Here, we're detecting a zoom from the component
-			// and setting the slider value accordingly
 			protected function _onZoom():void
 			{
 				
 			}
 			
-			// The PanZoomComponent provides an event "pan" for which you can set a callback
-			// whenever a pan happens
 			protected function _onPan():void
 			{
-				//trace("We're panning!!!");
 			}
 			
 			private function changeScreenState(event:MouseEvent):void
@@ -188,7 +197,7 @@
 						<s:Image mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/mouse.png')"/>
 						<mx:VRule height="100%"/>
-						<s:Image mouseDown="selectComponent(event)"
+						<s:Image id="copier" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/copie.png')"/>
 						<s:Image click="removeComponent()"
 								 source="@Embed(source = '/images/remove.png')"/>
@@ -197,26 +206,26 @@
 						<mx:VRule height="100%"/>
 						<s:Image id="stop" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/stop.png')" toolTip="Stop"/>
-						<s:Image id="line" mouseDown="selectComponent(event)"
-								 source="@Embed(source = '/images/ligne.png')" toolTip="Ligne"/>
+						<s:Image id="batiment" mouseDown="selectComponent(event)"
+								 source="@Embed(source = '/images/ligne.png')" toolTip="Batiment"/>
 						<s:Image id="parcking" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/parcking.png')" toolTip="Parcking"/>
-						<s:Image id="point" mouseDown="selectComponent(event)"
-								 source="@Embed(source = '/images/point.png')" toolTip="Point"/>
-						<s:Image id="trapezoidal" mouseDown="selectComponent(event)"
+						<s:Image id="ELECTRIC_PYLON" mouseDown="selectComponent(event)"
+								 source="@Embed(source = '/images/point.png')" toolTip="ELECTRIC PYLON"/>
+						<s:Image id="NICHE_REEFER" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/trapezoidal.png')"
-								 toolTip="Triangle"/>
+								 toolTip="NICHE REEFER"/>
 						<s:Image id="rect" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/ractangle_mere.png')"
-								 toolTip="Rectangle"/>
+								 toolTip="Espace"/>
 						<s:Image id="rectangle_vert" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/rectangle_vert.png')"
-								 toolTip="Rectangle"/>
-						<s:Image id="tringle_bizzar" mouseDown="selectComponent(event)"
+								 toolTip="Espace"/>
+						<s:Image id="ROUTE" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/triangle_bizzar.png')"
-								 toolTip="Triangle"/>
+								 toolTip="Route"/>
 						<mx:VRule height="100%"/>
-						<s:Image id="rail" mouseDown="selectComponent(event)"
+						<s:Image id="RAIL" mouseDown="selectComponent(event)"
 								 source="@Embed(source = '/images/rail.png')" toolTip="Rail"/>
 						<mx:VRule height="100%"/>
 						<s:Image mouseDown="selectComponent(event)"

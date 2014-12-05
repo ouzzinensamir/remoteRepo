@@ -6,6 +6,7 @@ package
 	import flash.display.Shape;
 	import flash.events.MouseEvent;
 	
+	import mx.controls.Alert;
 	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
 	import mx.managers.PopUpManager;
@@ -71,9 +72,12 @@ package
 		{
 			if(event.target!=null && event.target is AbstractComponent){
 				selectedComponent=event.target as AbstractComponent;
+				selectedComponent.setFocus();
+				selectedComponent.focusRect=true;
 				selectedComponent.startDrag(false);
+			}else{
+			 selectedComponent=null
 			}
-			
 		}
 		
 		private function _onMouseUp(event:MouseEvent):void
@@ -83,8 +87,12 @@ package
 				selectedComponent=event.target as AbstractComponent;
 				var newX:int=selectedComponent.x;
 				var newY:int=selectedComponent.y;
-				//dragInitiator.updateCoordinates(newX,newY);
+				//selectedComponent.updateCoordinates(newX,newY);
+				selectedComponent.setFocus();
+				selectedComponent.focusRect=true;
 				selectedComponent.stopDrag();
+			}else{
+				selectedComponent=null
 			}
 		}
 		
@@ -103,6 +111,8 @@ package
 		{
 			if( event.target !=null && (event.target is AbstractComponent)){
 				var clickedComponent:AbstractComponent=event.target as AbstractComponent;
+				clickedComponent.setFocus();
+				clickedComponent.focusRect=true;
 				var coordinates:GenericPopup=clickedComponent.createPopup();
 				coordinates.terminal=this;
 				PopUpManager.addPopUp(coordinates,this,true);
@@ -125,6 +135,15 @@ package
 			if(selectedComponent != null){
 				this.removeChild(selectedComponent);
 				selectedComponent =null;
+			}
+		}
+		
+		public function collerSelectedComponent(definedX:int,definedY:int):void{
+			if(selectedComponent != null){
+				var newComponent:AbstractComponent=selectedComponent.clone(definedX,definedY);
+				newComponent.drawComponentIn(this);
+			}else{
+				Alert.show("Aucune composant n'est selectionné");
 			}
 		}
 		

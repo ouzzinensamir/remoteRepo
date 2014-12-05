@@ -8,29 +8,26 @@ package component.passifs
 	import org.rockholla.controls.panzoom.PanZoomContent;
 	
 	import popups.GenericPopup;
-	import popups.RectPopup;
+	import popups.SpacePopup;
 
 	[Bindable]
-	public class Rectangle extends AbstractComponent
+	public class Space extends AbstractComponent
 	{
 		public var widthComp:int;
 		public var heightComp:int;
 		public var color:uint;
 		public var orientation:String;
-		protected var type:String;
-		private var shape:Shape = new Shape();
-		public function Rectangle(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String,color:uint){
-			this.x1=x1;
-			this.y1=y1;
+		
+		public function Space(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String,color:uint){
+			super(x1,y1,TypesPassifComponent.SPACE);
 			this.widthComp= widthComp;
 			this.heightComp= heightComp;
 			this.orientation=orientation;
 			this.color=color;
-			this.type=TypesPassifComponent.RECTANGLE;
 		}
 		override public function drawComponentIn(terminal:PanZoomContent):void{
+			var shape:Shape = new Shape();
 			var signe:Number=orientation =="Gauche"? -1 :1;
-			shape.graphics.clear();
 			shape.graphics.beginFill(color,1.0);
 			shape.graphics.drawRect(x1, y1,signe*widthComp,signe*heightComp);
 			shape.graphics.endFill();
@@ -39,7 +36,10 @@ package component.passifs
 			super.drawComponentIn(terminal);
 		}
 		override public function createPopup():GenericPopup{
-			return new RectPopup(0,0,0,this);
+			return new SpacePopup(0,0,0,this);
+		}
+		override public function clone(newX:int,newY:int):AbstractComponent{
+			return new Space(newX,newY,widthComp,heightComp,orientation,color);
 		}
 	}
 }

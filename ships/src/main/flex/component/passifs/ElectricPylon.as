@@ -7,22 +7,19 @@ package component.passifs
 	
 	import org.rockholla.controls.panzoom.PanZoomContent;
 	
+	import popups.ElectricPylonPopup;
 	import popups.GenericPopup;
-	import popups.PointPopup;
 
 	[Bindable]
-	public class PointComp extends AbstractComponent
+	public class ElectricPylon extends AbstractComponent
 	{
 		public var raduisValue:Number;
-		protected var type:String;
-		private var shape:Shape = new Shape();
-		public function PointComp(x1:int,y1:int,raduisValue:Number){
-			this.x1=x1;
-			this.y1=y1;
+		public function ElectricPylon(x1:int,y1:int,raduisValue:Number){
+			super(x1,y1,TypesPassifComponent.ELECTRIC_PYLON);
 			this.raduisValue=raduisValue;
-			this.type=TypesPassifComponent.POINT;
 		}
 		override public function drawComponentIn(terminal:PanZoomContent):void{
+			var shape:Shape =new Shape();
 			shape.graphics.clear();
 			shape.graphics.beginFill(0, 1.0);
 			shape.graphics.drawCircle(x1, y1,raduisValue);
@@ -32,7 +29,11 @@ package component.passifs
 			super.drawComponentIn(terminal);
 		}
 		override public function createPopup():GenericPopup{
-			return new PointPopup(0,0,this);
+			return new ElectricPylonPopup(0,0,this);
+		}
+		
+		override public function clone(newX:int,newY:int):AbstractComponent{
+			return new ElectricPylon(newX,newY,raduisValue);
 		}
 		
 	}

@@ -1,6 +1,5 @@
 package component.passifs
 {
-	
 	import component.AbstractComponent;
 	import component.passifs.dto.RailCoordinatesDto;
 	import component.passifs.dto.TypesPassifComponent;
@@ -13,25 +12,32 @@ package component.passifs
 	import org.rockholla.controls.panzoom.PanZoomContent;
 	
 	import popups.GenericPopup;
-	import popups.RailPopup;
-	
+	import popups.RoutePopup;
 
 	[Bindable]
-	public class Rail extends  AbstractComponent
+	public class Route extends AbstractComponent  
 	{
 		public var x2:int;
 		public var y2:int;
 		protected var effectiveGap:Number;
 		protected var separateGap:Number;
 		
-		
-		public function Rail(x1:int,y1:int,x2:int,y2:int)
+		public function Route(x1:int,y1:int,x2:int,y2:int)
 		{
-			super(x1,y1,TypesPassifComponent.RAIL);
+			super(x1,y1,TypesPassifComponent.ROUTE);
 			this.x2=x2;
 			this.y2=y2;
-			this.effectiveGap=2;
-			this.separateGap=4;
+			this.effectiveGap=1.5;
+			this.separateGap=1.5;
+		}
+		
+		override public function createPopup():GenericPopup{
+			return new RoutePopup(0,0,this);
+		}
+		
+		override public function clone(newX1:int,newY1:int):AbstractComponent{
+			var secondPoint:Point=calculateTheSecondPoint(newX1,newY1);
+			return new Route(newX1,newY1,secondPoint.x,secondPoint.y);
 		}
 		
 		override public function drawComponentIn(terminal:PanZoomContent):void{
@@ -46,9 +52,6 @@ package component.passifs
 			super.drawComponentIn(terminal);
 		}
 		
-		override public function createPopup():GenericPopup{
-			return new RailPopup(0,0,this);
-		}
 		
 		override public function updateCoordinates(newX:int,newY:int):void{
 			super.updateCoordinates(newX,newY);
@@ -56,13 +59,7 @@ package component.passifs
 			this.y2=this.y2+newX;
 		}
 		
-		override public function clone(newX1:int,newY1:int):AbstractComponent{
-			var secondPoint:Point=calculateTheSecondPoint(newX1,newY1);
-			return new Rail(newX1,newY1,secondPoint.x,secondPoint.y);
-			
-		}
-		
-		protected function calculateTheSecondPoint(newX1:int,newY1:int):Point{
+		private function calculateTheSecondPoint(newX1:int,newY1:int):Point{
 			var newX2:int=x2-x1+newX1;
 			var newY2:int=y2-y1+newY1;
 			return new Point(newX2,newY2);
@@ -100,14 +97,11 @@ package component.passifs
 			
 			shape.graphics.drawPath(commands, data);
 		}
-		protected function niveauInterpolation(currentIndex:int,maxInterpolation:int):Number{
+		private function niveauInterpolation(currentIndex:int,maxInterpolation:int):Number{
 			if(currentIndex==0){
 				return 0;
-			}if(currentIndex==maxInterpolation){
-				return 0.99;
 			}
 			return currentIndex/maxInterpolation;
 		}
-		
 	}
 }
