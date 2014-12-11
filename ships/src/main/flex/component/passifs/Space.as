@@ -9,6 +9,8 @@ package component.passifs
 	
 	import popups.GenericPopup;
 	import popups.SpacePopup;
+	
+	import spark.components.Label;
 
 	[Bindable]
 	public class Space extends AbstractComponent
@@ -17,21 +19,24 @@ package component.passifs
 		public var heightComp:int;
 		public var color:uint;
 		public var orientation:String;
+		public var componentLabel:String;
 		
-		public function Space(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String,color:uint){
+		public function Space(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String,color:uint,componentLabel:String){
 			super(x1,y1,TypesPassifComponent.SPACE);
 			this.widthComp= widthComp;
 			this.heightComp= heightComp;
 			this.orientation=orientation;
 			this.color=color;
+			this.componentLabel=componentLabel;
 		}
 		override public function drawComponentIn(terminal:PanZoomContent):void{
-			var shape:Shape = new Shape();
+			shape= new Shape();
 			var signe:Number=orientation =="Gauche"? -1 :1;
 			shape.graphics.beginFill(color,1.0);
 			shape.graphics.drawRect(x1, y1,signe*widthComp,signe*heightComp);
 			shape.graphics.endFill();
 			this.addChild(shape);
+			addLabel();
 			terminal.addChild(this);
 			super.drawComponentIn(terminal);
 		}
@@ -39,7 +44,20 @@ package component.passifs
 			return new SpacePopup(0,0,0,this);
 		}
 		override public function clone(newX:int,newY:int):AbstractComponent{
-			return new Space(newX,newY,widthComp,heightComp,orientation,color);
+			return new Space(newX,newY,widthComp,heightComp,orientation,color,componentLabel);
+		}
+		
+		private function addLabel():void{
+			if(componentLabel != null && componentLabel.length>0){
+				var label:Label = new Label();
+				label.text=componentLabel;
+				label.x=x1;
+				label.width=widthComp;
+				label.height=heightComp;
+				label.y=y1;
+				label.setStyle( "textAlign", "center" );
+				this.addChild(label);
+			}
 		}
 	}
 }

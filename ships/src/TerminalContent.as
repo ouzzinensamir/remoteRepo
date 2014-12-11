@@ -24,6 +24,7 @@ package
 		
 		private var componentGrid:UIComponent;
 		
+		[Bindable]
 		public var selectedComponent:AbstractComponent;
 		
 		public function TerminalContent()
@@ -135,6 +136,12 @@ package
 			if(selectedComponent != null){
 				this.removeChild(selectedComponent);
 				selectedComponent =null;
+			}
+		}
+		
+		public function rotate():void{
+			if(selectedComponent != null){
+				selectedComponent.rotation=30;
 			}
 		}
 		

@@ -25,7 +25,7 @@ package component.passifs
 			this.deviation= 4;
 		}
 		override public function drawComponentIn(terminal:PanZoomContent):void{
-			var shape:Shape = new Shape();
+			shape= new Shape();
 			shape.graphics.beginFill(0x612BA8, 1.0);
 			orientation=="Haut" ? createTrapezoidalWithOrientationHaut(shape) : createTrapezoidalWithOrientationBas(shape);
 			shape.graphics.endFill();

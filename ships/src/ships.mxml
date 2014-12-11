@@ -8,6 +8,13 @@
 					   creationComplete="creationCompleteHandler(event)">
 	<fx:Declarations>
 		<s:NumberFormatter id="formatNumber" fractionalDigits="2"/>
+		<mx:Rotate id="rotate"
+				   target="{terminal.selectedComponent}"
+				   angleFrom="0"
+				   angleTo="30"
+				   duration="1000"
+				   originX="{terminal.selectedComponent.centerX}"
+				   originY="{terminal.selectedComponent.centerY}" />
 	</fx:Declarations>
 	
 	<fx:Script>
@@ -113,6 +120,10 @@
 						return new SpacePopup(definedX,definedY,0x3366FF);
 					case "rectangle_vert" :
 						return new SpacePopup(definedX,definedY,0x4BC439);
+					case "batiment" :
+						return new SpacePopup(definedX,definedY,0xFF0000);
+					case "parcking" :
+						return new SpacePopup(definedX,definedY,0xD2691E);
 					case TypesPassifComponent.ROUTE :
 						return new RoutePopup(definedX,definedY);
 					case TypesPassifComponent.ELECTRIC_PYLON :
@@ -201,7 +212,7 @@
 								 source="@Embed(source = '/images/copie.png')"/>
 						<s:Image click="removeComponent()"
 								 source="@Embed(source = '/images/remove.png')"/>
-						<s:Image mouseDown="selectComponent(event)"
+						<s:Image click="{rotate.play()}"
 								 source="@Embed(source = '/images/refrech.png')"/>
 						<mx:VRule height="100%"/>
 						<s:Image id="stop" mouseDown="selectComponent(event)"

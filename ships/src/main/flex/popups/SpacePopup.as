@@ -43,7 +43,7 @@ package popups
 		
 		override protected function addNewComponent(event:MouseEvent):void{
 			var rectangle:Space=new Space(Number(x1Value.text),Number(y1Value.text),
-				Number(widthComp.text),Number(heightComp.text),orientation.selectedItem as String,color);
+				Number(widthComp.text),Number(heightComp.text),orientation.selectedItem as String,color,componentLabel.text);
 			rectangle.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}

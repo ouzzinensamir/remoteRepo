@@ -19,7 +19,7 @@ package component.passifs
 			this.raduisValue=raduisValue;
 		}
 		override public function drawComponentIn(terminal:PanZoomContent):void{
-			var shape:Shape =new Shape();
+			shape= new Shape();
 			shape.graphics.clear();
 			shape.graphics.beginFill(0, 1.0);
 			shape.graphics.drawCircle(x1, y1,raduisValue);

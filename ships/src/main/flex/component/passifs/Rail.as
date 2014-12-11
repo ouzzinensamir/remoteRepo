@@ -37,7 +37,7 @@ package component.passifs
 		override public function drawComponentIn(terminal:PanZoomContent):void{
 			var initStart:Point = new Point(x1, y1);
 			var initEnd:Point = new Point(x2, y2);
-			var shape:Shape = new Shape();
+			shape= new Shape();
 			shape.graphics.lineStyle(1.5, 0);
 			drawTwoParallelLines(shape,initStart,initEnd);
 			drawSeparateLines(shape,initStart,initEnd);

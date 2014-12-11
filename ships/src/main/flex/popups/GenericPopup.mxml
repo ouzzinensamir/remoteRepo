@@ -91,6 +91,9 @@
 						<mx:FormItem styleName="label" label="height :" required="true" >
 							<s:TextInput id="heightComp" text.NICHE_REEFER="15"/>
 						</mx:FormItem>
+						<mx:FormItem styleName="label" label="Label :" required="false" includeIn="SPACE">
+							<s:TextInput id="componentLabel"/>
+						</mx:FormItem>
 						<mx:FormItem styleName="label" label="Orientation :" required="true" >
 							<s:DropDownList id="orientation" selectedIndex="0" includeIn="SPACE"> 
 								<mx:ArrayCollection>
