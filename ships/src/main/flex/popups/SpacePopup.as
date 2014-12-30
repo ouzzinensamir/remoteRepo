@@ -32,6 +32,7 @@ package popups
 				this.heightComp.text=(currentComponent as Space).heightComp+"";
 				this.color=(currentComponent as Space).color;
 				this.orientation.selectedItem=(currentComponent as Space).orientation;
+				this.componentLabel.text=(currentComponent as Space).componentLabel;
 			}
 		}
 		

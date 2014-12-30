@@ -51,11 +51,10 @@ package component.passifs
 			if(componentLabel != null && componentLabel.length>0){
 				var label:Label = new Label();
 				label.text=componentLabel;
-				label.x=x1;
-				label.width=widthComp;
-				label.height=heightComp;
-				label.y=y1;
-				label.setStyle( "textAlign", "center" );
+				label.x=centerX;
+				label.y=centerY;
+				label.width=widthComp/2;
+				label.height=heightComp/2;
 				this.addChild(label);
 			}
 		}
