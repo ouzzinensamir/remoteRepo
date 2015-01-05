@@ -4,6 +4,7 @@ package component.passifs
 	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.display.Shape;
+	import flash.geom.Point;
 	
 	import org.rockholla.controls.panzoom.PanZoomContent;
 	
@@ -14,8 +15,8 @@ package component.passifs
 	public class ElectricPylon extends AbstractComponent
 	{
 		public var raduisValue:Number;
-		public function ElectricPylon(x1:int,y1:int,raduisValue:Number){
-			super(x1,y1,TypesPassifComponent.ELECTRIC_PYLON);
+		public function ElectricPylon(x1:int,y1:int,raduisValue:Number,angle:Number){
+			super(x1,y1,TypesPassifComponent.ELECTRIC_PYLON,angle);
 			this.raduisValue=raduisValue;
 		}
 		override public function drawComponentIn(terminal:PanZoomContent):void{
@@ -33,7 +34,10 @@ package component.passifs
 		}
 		
 		override public function clone(newX:int,newY:int):AbstractComponent{
-			return new ElectricPylon(newX,newY,raduisValue);
+			return new ElectricPylon(newX,newY,raduisValue,angle);
+		}
+		override public function get center():Point{
+			return new Point(x1+shape.width/2,y1+shape.height/2);
 		}
 		
 	}

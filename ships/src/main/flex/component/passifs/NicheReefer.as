@@ -4,6 +4,7 @@ package component.passifs
 	import component.passifs.dto.TypesPassifComponent;
 	
 	import flash.display.Shape;
+	import flash.geom.Point;
 	
 	import org.rockholla.controls.panzoom.PanZoomContent;
 	
@@ -17,8 +18,9 @@ package component.passifs
 		public var heightComp:int;
 		public var orientation:String;
 		private var deviation:Number;
-		public function NicheReefer(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String){
-			super(x1,y1,TypesPassifComponent.NICHE_REEFER);
+		
+		public function NicheReefer(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String,angle:Number){
+			super(x1,y1,TypesPassifComponent.NICHE_REEFER,angle);
 			this.widthComp= widthComp;
 			this.heightComp= heightComp;
 			this.orientation=orientation;
@@ -38,7 +40,11 @@ package component.passifs
 		}
 		
 		override public function clone(newX:int,newY:int):AbstractComponent{
-			return new NicheReefer(newX,newY,widthComp,heightComp,orientation);
+			return new NicheReefer(newX,newY,widthComp,heightComp,orientation,angle);
+		}
+		
+		override public function get center():Point{
+			return new Point(x1+shape.width/2,y1+shape.height/2);
 		}
 		
 		private function createTrapezoidalWithOrientationHaut(shape:Shape):void{

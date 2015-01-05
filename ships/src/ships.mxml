@@ -10,11 +10,11 @@
 		<s:NumberFormatter id="formatNumber" fractionalDigits="2"/>
 		<mx:Rotate id="rotate"
 				   target="{terminal.selectedComponent}"
-				   angleFrom="0"
-				   angleTo="30"
+				   angleFrom="{terminal.selectedComponent.angle}"
+				   angleTo="{terminal.selectedComponent.angle+30}"
 				   duration="1000"
-				   originX="{terminal.selectedComponent.centerX}"
-				   originY="{terminal.selectedComponent.centerY}" />
+				   originX="{terminal.selectedComponent.center.x}"
+				   originY="{terminal.selectedComponent.center.y}" />
 	</fx:Declarations>
 	
 	<fx:Script>

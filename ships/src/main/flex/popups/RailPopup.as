@@ -36,7 +36,12 @@ package popups
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var rail:Rail=new Rail(Number(x1Value.text),Number(y1Value.text),Number(x2Value.text),Number(y2Value.text));
+			var x1:int=Number(x1Value.text);
+			var y1:int=Number(y1Value.text);
+			var x2:int=Number(x2Value.text);
+			var y2:int=Number(y2Value.text);
+			var angle:Number=angleValue.text!=null ? Number(angleValue.text) : 0;
+			var rail:Rail=new Rail(x1,y1,x2,y2,angle);
 			rail.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}

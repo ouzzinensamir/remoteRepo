@@ -17,14 +17,12 @@ package component.passifs
 	[Bindable]
 	public class Route extends AbstractComponent  
 	{
-		public var x2:int;
-		public var y2:int;
 		protected var effectiveGap:Number;
 		protected var separateGap:Number;
 		
-		public function Route(x1:int,y1:int,x2:int,y2:int)
+		public function Route(x1:int,y1:int,x2:int,y2:int,angle:Number)
 		{
-			super(x1,y1,TypesPassifComponent.ROUTE);
+			super(x1,y1,TypesPassifComponent.ROUTE,angle);
 			this.x2=x2;
 			this.y2=y2;
 			this.effectiveGap=1.5;
@@ -37,7 +35,7 @@ package component.passifs
 		
 		override public function clone(newX1:int,newY1:int):AbstractComponent{
 			var secondPoint:Point=calculateTheSecondPoint(newX1,newY1);
-			return new Route(newX1,newY1,secondPoint.x,secondPoint.y);
+			return new Route(newX1,newY1,secondPoint.x,secondPoint.y,angle);
 		}
 		
 		override public function drawComponentIn(terminal:PanZoomContent):void{

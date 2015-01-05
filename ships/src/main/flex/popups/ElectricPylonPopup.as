@@ -38,7 +38,10 @@ package popups
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var electricPylon:ElectricPylon=new ElectricPylon(Number(x1Value.text),Number(y1Value.text),Number(raduisValue.text));
+			var x1:int=Number(x1Value.text);
+			var y1:int=Number(y1Value.text);
+			var angle:Number=angleValue.text!=null ? Number(angleValue.text) : 0;
+			var electricPylon:ElectricPylon=new ElectricPylon(x1,y1,Number(raduisValue.text),angle);
 			electricPylon.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}

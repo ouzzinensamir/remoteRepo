@@ -4,8 +4,9 @@
 				close="close(event)"
 				cornerRadius="15"
 				controlBarVisible="true"
-				width="500"
-				height="300"
+				width="400"
+				height="370"
+				title="Créer un Composant Passif"
 				creationComplete="init()">
 	<fx:Script>
 		<![CDATA[
@@ -40,12 +41,21 @@
 				PopUpManager.centerPopUp(this);
 			}
 			protected function addNewComponent(event:MouseEvent):void{
-				if(currentComponent!= null){
-					terminal.removeChild(currentComponent);
-				}
+				removeExistingComponent();
 				close(event);
 			}
 			
+			private function removeExistingComponent():void{
+				if(currentComponent!= null){
+					terminal.removeChild(currentComponent);
+				}
+			}
+			
+			protected function calcultateWith(x1:int,y1:int,x2:int,y2:int):int{
+				var firstPoint:Point=new Point(x1,y1);
+				var secandPoint:Point=new Point(x2,y2);
+				return Point.distance(firstPoint,secandPoint);
+			}
 			public function close(event:Event):void{
 				currentComponent = null;
 				PopUpManager.removePopUp(this);
@@ -58,62 +68,77 @@
 		
 	</fx:Declarations>
 	
-	<s:HGroup width="100%" height="100%"
-			horizontalAlign="center"
-			verticalAlign="middle">
-			<mx:VBox id="container" width="100%" height="100%" paddingTop="20">
-				<mx:HBox width="100%" height="80%" horizontalAlign="left" horizontalGap="30" id="generalCoordinates">
-					<mx:Form id="formPoint1">
-						<mx:FormItem styleName="label" label="X :" required="true" id="x1">
-							<s:TextInput id="x1Value" text="{definedX}" enabled="false"/>
-						</mx:FormItem>
-						<mx:FormItem styleName="label" label="Y :" required="true" id="y1" >
-							<s:TextInput id="y1Value" text="{definedY}"  enabled="false"/>
-						</mx:FormItem>
-					</mx:Form>
-					<mx:Form id="formPoint2" includeIn="ROUTE,RAIL">
-						<mx:FormItem styleName="label" label="X2 :" required="true" id="x2">
-							<s:TextInput id="x2Value"/>
-						</mx:FormItem>
-						<mx:FormItem styleName="label" label="Y2 :" required="true" id="y2" >
-							<s:TextInput id="y2Value"/>
-						</mx:FormItem>
-					</mx:Form>
-					<mx:Form id="raduis" includeIn="ELECTRIC_PYLON">
-						<mx:FormItem styleName="label" label="Raduis :" required="true" id="raduisLabel">
-							<s:TextInput id="raduisValue" text="5"/>
-						</mx:FormItem>
-					</mx:Form>
-					<mx:Form id="formDimension" includeIn="SPACE,NICHE_REEFER">
-						<mx:FormItem styleName="label" label="Width :" required="true">
-							<s:TextInput id="widthComp" text.NICHE_REEFER="15"/>
-						</mx:FormItem>
-						<mx:FormItem styleName="label" label="height :" required="true" >
-							<s:TextInput id="heightComp" text.NICHE_REEFER="15"/>
-						</mx:FormItem>
-						<mx:FormItem styleName="label" label="Label :" required="false" includeIn="SPACE">
-							<s:TextInput id="componentLabel"/>
-						</mx:FormItem>
-						<mx:FormItem styleName="label" label="Orientation :" required="true" >
-							<s:DropDownList id="orientation" selectedIndex="0" includeIn="SPACE"> 
-								<mx:ArrayCollection>
-									<fx:String>Droite</fx:String>
-									<fx:String>Gauche</fx:String>
-								</mx:ArrayCollection>
-							</s:DropDownList>
-							<s:DropDownList id="deviation" selectedIndex="0" includeIn="NICHE_REEFER"> 
-								<mx:ArrayCollection>
-									<fx:String>Haut</fx:String>
-									<fx:String>Bas</fx:String>
-								</mx:ArrayCollection>
-							</s:DropDownList>
-						</mx:FormItem>
-					</mx:Form>
+	<s:HGroup width="100%" height="100%">
+			<mx:VBox id="container" width="100%" height="100%" paddingTop="20" verticalAlign="middle" horizontalAlign="left">
+				<mx:HBox paddingLeft="20" horizontalAlign="left">
+					 <s:TabBar dataProvider="{cafeTownSendContent}"/>
 				</mx:HBox>
+					<mx:ViewStack id="cafeTownSendContent" resizeToContent="true" width="100%" height="80%" >
+							<s:NavigatorContent id="general" label="Géneral" width="100%" height="100%">
+									<mx:Form id="form">
+										<mx:FormItem styleName="label" label="Code :" required="true" id="codeComp">
+											<s:TextInput id="codeCompValue"/>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Libellé :" required="true" id="libelleComp">
+											<s:TextInput id="libelleCompValue"/>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Type :" required="true" id="typeComp">
+											<s:TextInput id="typeCompValue"/>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Coordonnées :" required="false" id="coordonnes">
+											<mx:HBox>
+												<mx:VBox>
+													<mx:FormItem styleName="label" label="X1 :" required="true" id="x1">
+														<s:TextInput id="x1Value" text="{definedX}" enabled="false" width="50"/>
+													</mx:FormItem>
+													<mx:FormItem styleName="label" label="Y1 :" required="true" id="y1" >
+														<s:TextInput id="y1Value" text="{definedY}"  enabled="false" width="50"/>
+													</mx:FormItem>
+												</mx:VBox>
+												<mx:VBox includeIn="ROUTE,RAIL,SPACE,NICHE_REEFER">
+													<mx:FormItem styleName="label" label="X2 :" required="true" id="x2" >
+														<s:TextInput id="x2Value" width="50"/>
+													</mx:FormItem>
+													<mx:FormItem styleName="label" label="Y2 :" required="true" id="y2" >
+														<s:TextInput id="y2Value" width="50"/>
+													</mx:FormItem>
+												</mx:VBox>
+											</mx:HBox>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Label :" required="false" includeIn="SPACE">
+											<s:TextInput id="componentLabel"/>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="height :" required="true" includeIn="SPACE,NICHE_REEFER" >
+											<s:TextInput id="heightComp" text.NICHE_REEFER="15"/>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Orientation :" required="true" includeIn="NICHE_REEFER" >
+											<s:DropDownList id="deviation" selectedIndex="0"> 
+												<mx:ArrayCollection>
+													<fx:String>Haut</fx:String>
+													<fx:String>Bas</fx:String>
+												</mx:ArrayCollection>
+											</s:DropDownList>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Raduis :" required="true" id="raduisLabel" includeIn="ELECTRIC_PYLON">
+											<s:TextInput id="raduisValue" text="5"/>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Angle :" required="true" id="angleLabel">
+											<s:TextInput id="angleValue" text=""/>
+										</mx:FormItem>
+										<mx:FormItem styleName="label" label="Couleur :" required="true" id="colorLabel">
+											<mx:ColorPicker id="colorValue"/>
+										</mx:FormItem>
+									</mx:Form>
+						</s:NavigatorContent >
+						
+						<s:NavigatorContent id="parametre" label="Paramétres" width="100%" height="100%">
+							
+						</s:NavigatorContent>
+					</mx:ViewStack>
 				<!-- Button -->
-				<mx:HBox  id="button"  width="90%" height="20%" verticalAlign="middle" horizontalAlign="right" paddingLeft="20">
-					<s:Button id="ko"  width="25%" cornerRadius="10" skinClass="skins.ButtonSkin" label="Close" click="close(event)"/>
-					<s:Button id="ok"  width="25%" cornerRadius="10" skinClass="skins.ButtonSkin" label="Add" click="addNewComponent(event)" />
+				<mx:HBox  id="button"  width="90%" height="20%" verticalAlign="middle" horizontalAlign="right">
+					<s:Button id="ko" width="100"  cornerRadius="10" skinClass="skins.ButtonSkin" label="Close" click="close(event)"/>
+					<s:Button id="ok" width="100" cornerRadius="10" skinClass="skins.ButtonSkin" label="Add" click="addNewComponent(event)" />
 				</mx:HBox>
 			</mx:VBox>
 	</s:HGroup>

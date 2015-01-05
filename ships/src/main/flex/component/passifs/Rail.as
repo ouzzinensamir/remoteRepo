@@ -19,15 +19,13 @@ package component.passifs
 	[Bindable]
 	public class Rail extends  AbstractComponent
 	{
-		public var x2:int;
-		public var y2:int;
 		protected var effectiveGap:Number;
 		protected var separateGap:Number;
 		
 		
-		public function Rail(x1:int,y1:int,x2:int,y2:int)
+		public function Rail(x1:int,y1:int,x2:int,y2:int,angle:Number)
 		{
-			super(x1,y1,TypesPassifComponent.RAIL);
+			super(x1,y1,TypesPassifComponent.RAIL,angle);
 			this.x2=x2;
 			this.y2=y2;
 			this.effectiveGap=2;
@@ -58,7 +56,7 @@ package component.passifs
 		
 		override public function clone(newX1:int,newY1:int):AbstractComponent{
 			var secondPoint:Point=calculateTheSecondPoint(newX1,newY1);
-			return new Rail(newX1,newY1,secondPoint.x,secondPoint.y);
+			return new Rail(newX1,newY1,secondPoint.x,secondPoint.y,angle);
 			
 		}
 		
