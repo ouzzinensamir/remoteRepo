@@ -1,6 +1,5 @@
 package popups
 {
-	import component.passifs.Route;
 	import component.passifs.ElectricPylon;
 	import component.passifs.dto.TypesPassifComponent;
 	
@@ -25,8 +24,7 @@ package popups
 		protected function _onCreationComplete(event:FlexEvent):void
 		{
 			if(this.currentComponent != null && currentComponent is ElectricPylon){
-				this.x1Text.text=(currentComponent as ElectricPylon).x1+"";
-				this.y1Text.text=(currentComponent as ElectricPylon).y1+"";
+				initializeValues();
 				this.raduisValue.text=(currentComponent as ElectricPylon).raduisValue+"";
 			}
 		}

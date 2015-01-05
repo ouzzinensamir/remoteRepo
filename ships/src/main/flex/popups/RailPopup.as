@@ -23,10 +23,7 @@ package popups
 		protected function _onCreationComplete(event:FlexEvent):void
 		{
 			if(this.currentComponent != null && currentComponent is Rail){
-				this.x1Text.text=(currentComponent as Rail).x1+"";
-				this.y1Text.text=(currentComponent as Rail).y1+"";
-				this.x2Text.text=(currentComponent as Rail).x2+"";
-				this.y2Text.text=(currentComponent as Rail).y2+"";
+				initializeValues();
 			}
 		}
 		override protected function updateDisplayList(

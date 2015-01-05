@@ -138,10 +138,9 @@ package
 				selectedComponent =null;
 			}
 		}
-		
-		public function rotate():void{
+		public function rotateComponent():void{
 			if(selectedComponent != null){
-				selectedComponent.rotation=30;
+				selectedComponent.updateAngle(30);
 			}
 		}
 		

@@ -76,6 +76,13 @@
 			protected function get angle():Number{
 				return angleValue.text!=null ? Number(angleValue.text) : 0;
 			}
+			protected function initializeValues():void{
+				this.x1Text.text=currentComponent.x1+"";
+				this.y1Text.text=currentComponent.y1+"";
+				this.x2Text.text=currentComponent.x2+"";
+				this.y2Text.text=currentComponent.y2+"";
+				this.angleValue.text=currentComponent.angle+"";
+			}
 			
 		]]>
 	</fx:Script>
@@ -111,7 +118,7 @@
 														<s:TextInput id="y1Text" text="{definedY}"  enabled="false" width="50"/>
 													</mx:FormItem>
 												</mx:VBox>
-												<mx:VBox includeIn="ROUTE,RAIL,SPACE,NICHE_REEFER">
+												<mx:VBox>
 													<mx:FormItem styleName="label" label="X2 :" required="true" id="x2" >
 														<s:TextInput id="x2Text" width="50"/>
 													</mx:FormItem>

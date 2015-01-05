@@ -35,16 +35,7 @@ package component
 			this.angle=angle;
 		}
 		public function drawComponentIn(terminal:PanZoomContent):void{
-			rotateComponent();
-		}
-		
-		private function rotateComponent():void{
-			rotate.target=this;
-			rotate.angleFrom=0;
-			rotate.angleTo=angle;
-			rotate.originX=center.x;
-			rotate.originY=center.y;
-			rotate.play();
+			rotateComponent(0,angle);
 		}
 		
 		public function createPopup():GenericPopup {
@@ -59,8 +50,22 @@ package component
 			return new AbstractComponent(newX,newY,TypesPassifComponent.GENERIC,0);
 		}
 		
+		public function updateAngle(newAngle:Number):void {
+			rotateComponent(angle,angle+newAngle);
+			this.angle=angle+newAngle;
+		}
+		
 		public function get center():Point{
 			return Point.interpolate(new Point(x1,y1),new Point(x2,y2),0.5);
+		}
+		
+		private function rotateComponent(angleFrom:Number,angleTo:Number):void{
+			rotate.target=this;
+			rotate.angleFrom=angleFrom;
+			rotate.angleTo=angleTo;
+			rotate.originX=center.x;
+			rotate.originY=center.y;
+			rotate.play();
 		}
 	}
 }

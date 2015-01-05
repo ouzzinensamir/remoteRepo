@@ -5,7 +5,6 @@ package popups
 	import component.passifs.utils.Orientation;
 	
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
 	
 	import mx.events.FlexEvent;
 
@@ -28,10 +27,7 @@ package popups
 		protected function _onCreationComplete(event:FlexEvent):void
 		{
 			if(this.currentComponent != null && currentComponent is Space){
-				this.x1Text.text=(currentComponent as Space).x1+"";
-				this.y1Text.text=(currentComponent as Space).y1+"";
-				this.x2Text.text=(currentComponent as Space).x2+"";
-				this.y2Text.text=(currentComponent as Space).y2+"";
+				initializeValues();
 				this.heightComp.text=(currentComponent as Space).heightComp+"";
 				this.color=(currentComponent as Space).color;
 				this.componentLabel.text=(currentComponent as Space).componentLabel;

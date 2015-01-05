@@ -23,10 +23,7 @@ package popups
 		protected function _onCreationComplete(event:FlexEvent):void
 		{
 			if(this.currentComponent != null && currentComponent is NicheReefer){
-				this.x1Text.text=(currentComponent as NicheReefer).x1+"";
-				this.y1Text.text=(currentComponent as NicheReefer).y1+"";
-				this.x2Text.text=(currentComponent as NicheReefer).x2+"";
-				this.y2Text.text=(currentComponent as NicheReefer).y2+"";
+				initializeValues();
 				this.heightComp.text=(currentComponent as NicheReefer).heightComp+"";
 				this.deviation.selectedItem=(currentComponent as NicheReefer).orientation;
 			}

@@ -8,13 +8,6 @@
 					   creationComplete="creationCompleteHandler(event)">
 	<fx:Declarations>
 		<s:NumberFormatter id="formatNumber" fractionalDigits="2"/>
-		<mx:Rotate id="rotate"
-				   target="{terminal.selectedComponent}"
-				   angleFrom="{terminal.selectedComponent.angle}"
-				   angleTo="{terminal.selectedComponent.angle+30}"
-				   duration="1000"
-				   originX="{terminal.selectedComponent.center.x}"
-				   originY="{terminal.selectedComponent.center.y}" />
 	</fx:Declarations>
 	
 	<fx:Script>
@@ -159,6 +152,10 @@
 				terminal.removeSelectedComponent();
 			}
 			
+			private function rotateComponent():void {
+				terminal.rotateComponent();
+			}
+			
 			private function spyFixedZoomPoint():Point{
 				var selectedComponent:AbstractComponent=terminal.selectedComponent;
 				return selectedComponent != null ?//
@@ -212,7 +209,7 @@
 								 source="@Embed(source = '/images/copie.png')"/>
 						<s:Image click="removeComponent()"
 								 source="@Embed(source = '/images/remove.png')"/>
-						<s:Image click="{rotate.play()}"
+						<s:Image click="rotateComponent()"
 								 source="@Embed(source = '/images/refrech.png')"/>
 						<mx:VRule height="100%"/>
 						<s:Image id="stop" mouseDown="selectComponent(event)"
