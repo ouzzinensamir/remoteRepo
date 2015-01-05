@@ -5,7 +5,7 @@
 				cornerRadius="15"
 				controlBarVisible="true"
 				width="400"
-				height="370"
+				height="400"
 				title="Créer un Composant Passif"
 				creationComplete="init()">
 	<fx:Script>
@@ -51,14 +51,30 @@
 				}
 			}
 			
-			protected function calcultateWith(x1:int,y1:int,x2:int,y2:int):int{
-				var firstPoint:Point=new Point(x1,y1);
-				var secandPoint:Point=new Point(x2,y2);
+			protected function calcultateComponentWith():int{
+				var firstPoint:Point=new Point(x1Value,y1Value);
+				var secandPoint:Point=new Point(x2Value,y2Value);
 				return Point.distance(firstPoint,secandPoint);
 			}
 			public function close(event:Event):void{
 				currentComponent = null;
 				PopUpManager.removePopUp(this);
+			}
+			
+			protected function get x1Value():Number{
+				return Number(x1Text.text);
+			}
+			protected function get y1Value():Number{
+				return Number(y1Text.text);
+			}
+			protected function get x2Value():Number{
+				return Number(x2Text.text);
+			}
+			protected function get y2Value():Number{
+				return Number(y2Text.text);
+			}
+			protected function get angle():Number{
+				return angleValue.text!=null ? Number(angleValue.text) : 0;
 			}
 			
 		]]>
@@ -89,18 +105,18 @@
 											<mx:HBox>
 												<mx:VBox>
 													<mx:FormItem styleName="label" label="X1 :" required="true" id="x1">
-														<s:TextInput id="x1Value" text="{definedX}" enabled="false" width="50"/>
+														<s:TextInput id="x1Text" text="{definedX}" enabled="false" width="50"/>
 													</mx:FormItem>
 													<mx:FormItem styleName="label" label="Y1 :" required="true" id="y1" >
-														<s:TextInput id="y1Value" text="{definedY}"  enabled="false" width="50"/>
+														<s:TextInput id="y1Text" text="{definedY}"  enabled="false" width="50"/>
 													</mx:FormItem>
 												</mx:VBox>
 												<mx:VBox includeIn="ROUTE,RAIL,SPACE,NICHE_REEFER">
 													<mx:FormItem styleName="label" label="X2 :" required="true" id="x2" >
-														<s:TextInput id="x2Value" width="50"/>
+														<s:TextInput id="x2Text" width="50"/>
 													</mx:FormItem>
 													<mx:FormItem styleName="label" label="Y2 :" required="true" id="y2" >
-														<s:TextInput id="y2Value" width="50"/>
+														<s:TextInput id="y2Text" width="50"/>
 													</mx:FormItem>
 												</mx:VBox>
 											</mx:HBox>

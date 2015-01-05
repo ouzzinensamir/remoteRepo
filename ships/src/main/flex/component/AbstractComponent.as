@@ -26,6 +26,7 @@ package component
 		public var libelle:String;
 		public var angle:Number;
 		protected var shape:Shape;
+		private var rotate:Rotate=new Rotate();
 		
 		public function AbstractComponent(x1:int,y1:int,type:String,angle:Number){
 			this.x1=x1;
@@ -38,7 +39,6 @@ package component
 		}
 		
 		private function rotateComponent():void{
-			var rotate:Rotate=new Rotate();
 			rotate.target=this;
 			rotate.angleFrom=0;
 			rotate.angleTo=angle;

@@ -25,8 +25,8 @@ package popups
 		protected function _onCreationComplete(event:FlexEvent):void
 		{
 			if(this.currentComponent != null && currentComponent is ElectricPylon){
-				this.x1Value.text=(currentComponent as ElectricPylon).x1+"";
-				this.y1Value.text=(currentComponent as ElectricPylon).y1+"";
+				this.x1Text.text=(currentComponent as ElectricPylon).x1+"";
+				this.y1Text.text=(currentComponent as ElectricPylon).y1+"";
 				this.raduisValue.text=(currentComponent as ElectricPylon).raduisValue+"";
 			}
 		}
@@ -38,10 +38,7 @@ package popups
 		}
 		
 		override protected function addNewComponent(event:MouseEvent):void{
-			var x1:int=Number(x1Value.text);
-			var y1:int=Number(y1Value.text);
-			var angle:Number=angleValue.text!=null ? Number(angleValue.text) : 0;
-			var electricPylon:ElectricPylon=new ElectricPylon(x1,y1,Number(raduisValue.text),angle);
+			var electricPylon:ElectricPylon=new ElectricPylon(x1Value,y1Value,Number(raduisValue.text),angle);
 			electricPylon.drawComponentIn(terminal);
 			super.addNewComponent(event);
 		}

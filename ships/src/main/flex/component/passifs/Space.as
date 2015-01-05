@@ -23,8 +23,10 @@ package component.passifs
 		public var orientation:String;
 		public var componentLabel:String;
 		
-		public function Space(x1:int,y1:int,widthComp:int,heightComp:int,orientation:String,color:uint,componentLabel:String,angle:Number){
+		public function Space(x1:int,y1:int,x2:int,y2:int,widthComp:int,heightComp:int,orientation:String,color:uint,componentLabel:String,angle:Number){
 			super(x1,y1,TypesPassifComponent.SPACE,angle);
+			this.x2=x2;
+			this.y2=y2;
 			this.widthComp= widthComp;
 			this.heightComp= heightComp;
 			this.orientation=orientation;
@@ -47,7 +49,7 @@ package component.passifs
 			return new SpacePopup(0,0,0,this);
 		}
 		override public function clone(newX:int,newY:int):AbstractComponent{
-			return new Space(newX,newY,widthComp,heightComp,orientation,color,componentLabel,angle);
+			return new Space(newX,newY,x2,y2,widthComp,heightComp,orientation,color,componentLabel,angle);
 		}
 		override public function get center():Point{
 			return new Point(x1+shape.width/2,y1+shape.height/2);
